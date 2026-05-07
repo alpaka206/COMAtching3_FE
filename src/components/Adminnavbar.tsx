@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../routes";
 
 function AdminNavbar() {
   const [activeMenu, setActiveMenu] = useState("main");
@@ -31,14 +32,14 @@ function AdminNavbar() {
       <div className={`menu ${menuOpen ? "open" : ""}`}>
         <div
           className={`menu-item ${activeMenu === "main" ? "active" : ""}`}
-          onClick={() => handleMenuClick("main", "/adminpage/charge-requests")}
+          onClick={() => handleMenuClick("main", ROUTES.adminChargeRequests)}
         >
           Main
         </div>
         <div
           className={`menu-item ${activeMenu === "request" ? "active" : ""}`}
           onClick={() =>
-            handleMenuClick("request", "/adminpage/charge-requests")
+            handleMenuClick("request", ROUTES.adminChargeRequests)
           }
         >
           충전요청
@@ -48,7 +49,7 @@ function AdminNavbar() {
             activeMenu === "user-management" ? "active" : ""
           }`}
           onClick={() =>
-            handleMenuClick("user-management", "/adminpage/user-management")
+            handleMenuClick("user-management", ROUTES.adminUserManagement)
           }
         >
           가입자관리
@@ -58,7 +59,7 @@ function AdminNavbar() {
             activeMenu === "team-management" ? "active" : ""
           }`}
           onClick={() =>
-            handleMenuClick("team-management", "/adminpage/team-management")
+            handleMenuClick("team-management", ROUTES.adminTeamManagement)
           }
         >
           팀관리

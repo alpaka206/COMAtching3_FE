@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useNavigate } from "react-router-dom";
 import * as styles from "../css/components/HeaderNav.css";
+import { ROUTES } from "../routes";
 // 뽑기관련된 페이지의 헤더 컴포넌트입니다.
 // 로고 클릭시 모든 데이터가 초기화 된채로 돌아가야합니다.
 function MatchHeader({ MatchState, setMatchState, setMatchPageResult }) {
@@ -13,13 +14,12 @@ function MatchHeader({ MatchState, setMatchState, setMatchPageResult }) {
       balance: null,
       isUseOption: [false, false, false, false],
       formData: {
-        mbti_option: "",
-        contact_frequency_option: "",
-        hobby_option: [],
-        age_option: "",
+        mbtiOption: "",
+        contactFrequencyOption: "",
+        hobbyOption: [],
+        ageOption: "",
         match_code: "",
-        no_same_major_option: false,
-        ai_option_count: 0,
+        sameMajorOption: false,
       },
     });
     setMatchPageResult({
@@ -32,7 +32,7 @@ function MatchHeader({ MatchState, setMatchState, setMatchPageResult }) {
       contactId: null,
       word: null,
     });
-    navigate("/code-reader");
+    navigate(ROUTES.codeReader);
   };
   return (
     <div className="match-header">

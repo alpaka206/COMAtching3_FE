@@ -1,11 +1,10 @@
 // @ts-nocheck
 import { Fragment, useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { userState } from "../atoms";
+import { useUserValue } from "../store/appStore";
 import * as styles from "../css/components/UserInfoRrev.css.ts";
 import UserInfoContainer from "./UserInfoContainer";
 function UserInfoRrev() {
-  const Info = useRecoilValue(userState);
+  const Info = useUserValue();
   const sliderRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const isInstagram = Info.contact_id && Info.contact_id.startsWith("@");

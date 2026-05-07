@@ -1,16 +1,15 @@
 // @ts-nocheck
-import { useState,useEffect} from "react";
-import { useRecoilState } from "recoil";
+import { useState } from "react";
 import Background from "../components/Background";
 import { useNavigate } from "react-router-dom";
-import { userState } from "../atoms";
 // 스타일링을 위한 CSS 파일 생성
 import HeaderBackPoint from "../components/HeaderBackPoint";
 import HartConfirmationModal from "../components/HartConfirmModal";
 import instance from "../axiosConfig"; // axios 인스턴스 불러오기
+import { useCurrentPoint } from "../hooks/useCurrentPoint";
 function Heart() {
   const navigate = useNavigate();
-  const [userPoint, setUserPoint] = useRecoilState(userState);
+  const [userPoint, setUserPoint] = useCurrentPoint();
   const [heartCount, setHeartCount] = useState(0); // 하트 갯수 상태 관리
   const [showModal, setShowModal] = useState(false); // 모달 상태 관리
   const calculateTotalAmount = (count) => {
@@ -26,29 +25,6 @@ function Heart() {
 
   const totalAmount = calculateTotalAmount(heartCount); // 총 금액 계산
   const remainingPoint = userPoint.point - totalAmount; // 잔여 포인트 계산
-  useEffect(() => {
-      // Fetch currentPoint from backend when component mounts
-      const fetchCurrentPoint = async () => {
-        try {
-          const response = await instance.get("/auth/user/api/currentPoint");
-          
-          // Assuming response.data.currentPoint is the point value you want to set in Recoil
-          setUserPoint((prev) => ({
-            ...prev,
-            point: response.data.data.currentPoint, // Update the point in Recoil
-          }));
-        } catch (error) {
-          console.error("Failed to fetch currentPoint:", error);
-        }
-        // setUserPoint((prev) => ({
-        //       ...prev,
-        //       point: 1000, // Update the point in Recoil
-        //     }));
-      };
-
-      fetchCurrentPoint();
-  }, [setUserPoint]); 
-
   const handleIncreaseHeart = () => {
     // 하트가 증가했을 때의 새로운 하트 개수와 새로운 총 금액을 계산
     const newHeartCount = heartCount + 1;
@@ -70,22 +46,10 @@ function Heart() {
   const handleHeartExchange = async () => {
     if (userPoint.point >= totalAmount) {
       try {
-        const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
-          const [name, value] = cookie.split("=");
-          acc[name] = value;
-          return acc;
-        }, {});
-        const accessToken = cookies.Authorization;
-
         const response = await instance.post(
-          "https://cuk.comatching.site/auth/user/api/pickme",
+          "/auth/user/api/pickme",
           {
             amount: heartCount,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
           }
         );
 

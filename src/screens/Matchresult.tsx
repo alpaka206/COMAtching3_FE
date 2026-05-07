@@ -3,26 +3,30 @@ import { useEffect, useMemo, useState } from "react";
 import Background from "../components/Background";
 import HeaderBackPoint from "../components/HeaderBackPoint";
 import Footer from "../components/Footer";
-import { useRecoilState } from "recoil";
-import { MatchResultState, MatchPickState, userState } from "../atoms";
+import {
+  useMatchPickState,
+  useMatchResultState,
+  useUserState,
+} from "../store/appStore";
 import { useNavigate } from "react-router-dom";
 import hobbyIcons from "../data/hobbyIcons";
 import Loading from "./Loading";
 
 import instance from "../axiosConfig"; // axios 인스턴스 불러오기
+import { ROUTES } from "../routes";
 
 function Matchresult() {
   const navigate = useNavigate();
-  const [MatchState] = useRecoilState(MatchPickState);
-  const [MatchResult, setMatchResult] = useRecoilState(MatchResultState);
+  const [MatchState] = useMatchPickState();
+  const [MatchResult, setMatchResult] = useMatchResultState();
 
-  const [resultPoint, setResultPoint] = useRecoilState(userState);
+  const [resultPoint, setResultPoint] = useUserState();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (MatchState.point > resultPoint.point) {
       alert("포인트가 부족합니다!!");
-      navigate("/charge-request", { replace: true });
+      navigate(ROUTES.charge, { replace: true });
       return;
     }
 
@@ -65,7 +69,7 @@ function Matchresult() {
   const resultData = useMemo(() => {
     const hobby = MatchResult.hobby.map((hobbyName) => {
       const matchedIcon = hobbyIcons.find((icon) => icon.label === hobbyName);
-      return { name: hobbyName, image: matchedIcon?.image || "" };
+      return { name: hobbyName, image: matchedIcon?.image ?? null };
     });
 
     return {
@@ -87,17 +91,17 @@ function Matchresult() {
       resultData.socialId === "" &&
       resultData.song === ""
     ) {
-      navigate("/", { replace: true });
+      navigate(ROUTES.home, { replace: true });
     }
   }, [resultData, navigate]);
   
   // 다시뽑기 버튼 핸들러
   const handleRematch = () => {
-    navigate("/matching");
+    navigate(ROUTES.matching);
   };
 
   const handleHome = () => {
-    navigate("/");
+    navigate(ROUTES.home);
   };
   console.log(resultData);
   return (
@@ -153,11 +157,13 @@ function Matchresult() {
                       <div className="MatchResult-Text-Hobby">
                         {resultData.hobby.map((hobby, index) => (
                           <div key={index} className="hobby-box">
-                            <img
-                              src={hobby.image}
-                              alt={hobby.name}
-                              className="hobby-icon"
-                            />
+                            {hobby.image ? (
+                              <img
+                                src={hobby.image}
+                                alt={hobby.name}
+                                className="hobby-icon"
+                              />
+                            ) : null}
                             <span className="hobby-text">{hobby.name}</span>
                           </div>
                         ))}

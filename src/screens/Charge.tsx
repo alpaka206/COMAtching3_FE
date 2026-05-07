@@ -1,18 +1,17 @@
 // @ts-nocheck
-import { useState, useEffect  } from "react";
-import { useRecoilState } from "recoil";
+import { useState } from "react";
 import Background from "../components/Background";
 import { useNavigate } from "react-router-dom";
 import HeaderBackPoint from "../components/HeaderBackPoint";
-import { userState } from "../atoms";
 import AccountButtonInfo from "../components/AccountButtonInfo";
 import instance from "../axiosConfig"; // axios 인스턴스 불러오기
 import ChargeConfirmationModal from "../components/ChargeConfirmationModal";// Modal 컴포넌트 불러오기
+import { useCurrentPoint } from "../hooks/useCurrentPoint";
 
 function Charge() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [amount, setAmount] = useState("");
-  const [userPoint, setUserPoint] = useRecoilState(userState);
+  const [userPoint] = useCurrentPoint();
   const [isAccountClicked, setIsAccountClicked] = useState(false);
   const [showModal, setShowModal] = useState(false); // Modal 상태 추가
   const navigate = useNavigate();
@@ -64,28 +63,6 @@ function Charge() {
   const handleCancel = () => {
     setShowModal(false); // Modal 닫기
   };
-  useEffect(() => {
-      // Fetch currentPoint from backend when component mounts
-      const fetchCurrentPoint = async () => {
-        try {
-          const response = await instance.get("/auth/user/api/currentPoint");
-          
-          // Assuming response.data.currentPoint is the point value you want to set in Recoil
-          setUserPoint((prev) => ({
-            ...prev,
-            point: response.data.data.currentPoint, // Update the point in Recoil
-          }));
-        } catch (error) {
-          console.error("Failed to fetch currentPoint:", error);
-        }
-        // setUserPoint((prev) => ({
-        //       ...prev,
-        //       point: 1000, // Update the point in Recoil
-        //     }));
-      };
-
-      fetchCurrentPoint();
-  }, [setUserPoint]);
   return (
     <div className="container">
       <HeaderBackPoint currentPoint={userPoint.point} />

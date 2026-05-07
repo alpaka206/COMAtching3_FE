@@ -21,6 +21,7 @@ const nextConfig = {
       ...(config.resolve.fallback ?? {}),
       fs: false,
       net: false,
+      'supports-color': false,
       tls: false,
     }
 

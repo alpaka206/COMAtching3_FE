@@ -2,8 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 // import { validateForm } from "../myfunction/formValidation";
 import instance from "../axiosConfig"; // axiosConfig 인스턴스 불러오기
-import { useRecoilState } from "recoil";
-import { userState, selectedMBTIState } from "../atoms";
+import { useSelectedMbtiState, useUserState } from "../store/appStore";
 import { useNavigate } from "react-router-dom";
 import MyInput from "../components/MyInput";
 import MajorSelector from "../components/MajorSelector";
@@ -16,17 +15,15 @@ import MBTISection from "../components/MBTISection";
 import AdmissionYearInput from "../components/AdmissionYearInput";
 import Background from "../components/Background";
 import ProgressBar from "../components/Progressbar";
-import Modal from "react-modal"; // Import react-modal
 import TermsAgreementModal from "../components/TermsAgreementModal"; 
 import HeaderMain from "../components/HeaderMain";
-Modal.setAppElement("#root");
 
 function Userinfo() {
     const navigate = useNavigate();
-    const [user, setUser] = useRecoilState(userState); // 유저 상태 관리
-    const [selectedMBTI, setSelectedMBTI] = useRecoilState(selectedMBTIState);
+    const [user, setUser] = useUserState(); // 유저 상태 관리
+    const [selectedMBTI, setSelectedMBTI] = useSelectedMbtiState();
     const [checkMethod, setCheckMethod] = useState({
-        school: "",
+        university: "",
         department: "",
         major: "",
         contactVerified: true,
@@ -80,6 +77,7 @@ function Userinfo() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         let errorMessage = "";
+        let nextValue = value;
 
         switch (name) {
             
@@ -100,14 +98,10 @@ function Userinfo() {
                 
                 break;
             case "age":
-                setUser((prevUser) => ({ ...prevUser, age: parseInt(value, 10) || "" }));
-                
+                nextValue = value !== "" ? parseInt(value, 10) || "" : "";
                 break;
             case "admissionYear":
-                setUser((prevUser) => ({ 
-                    ...prevUser, 
-                    admissionYear: value !== "" ? parseInt(value, 10) : "" 
-                }));
+                nextValue = value !== "" ? parseInt(value, 10) || "" : "";
                 break;
             case "gender":
                 if (value === "MALE" || value === "FEMALE") {
@@ -124,7 +118,7 @@ function Userinfo() {
         if (errorMessage) {
             alert(errorMessage);
         } else {
-            setUser((prevUser) => ({ ...prevUser, [name]: value }));
+            setUser((prevUser) => ({ ...prevUser, [name]: nextValue }));
         }
     };
     // const handleContactVerified = () => {
@@ -197,7 +191,7 @@ function Userinfo() {
 
 
 
-    const isMajorSelectorComplete = checkMethod.school && checkMethod.department && checkMethod.major;
+    const isMajorSelectorComplete = checkMethod.university && checkMethod.department && checkMethod.major;
     const isAgeInputComplete = user.age;
 
     const progress = isFiveChars ? 100 : isCommentVisible ? 90 : isSongInputVisible ? 80 : isMajorSelectorComplete ? (isAgeInputComplete ? 60 : 45) : 30;
@@ -208,7 +202,7 @@ function Userinfo() {
             checkMethod.department &&
             checkMethod.major &&
             user.age &&
-            user.admissionYear && user.admissionYear.length === 2 &&
+            user.admissionYear && String(user.admissionYear).length === 2 &&
             user.mbti && user.mbti.length >= 4 &&
             user.contactFrequency;
 

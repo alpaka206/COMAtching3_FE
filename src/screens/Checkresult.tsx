@@ -2,15 +2,14 @@
 import { useEffect } from "react";
 import Footer from "../components/Footer";
 import HeaderBack from "../components/HeaderBack";
-import { useRecoilState } from "recoil";
-import { checkresultState } from "../atoms";
+import { useCheckResultState } from "../store/appStore";
 import ResultInfoRrev from "../components/ResultInfoRrev";
 import { useNavigate } from "react-router-dom";
-import instance from "../axiosConfig"; // 전역 axios 인스턴스 불러오기
+import instance, { isAuthRequiredError } from "../axiosConfig"; // 전역 axios 인스턴스 불러오기
 
 function Checkresult() {
   const navigate = useNavigate();
-  const [isReview, setIsReview] = useRecoilState(checkresultState); // 결과 리뷰 상태 관리
+  const [isReview, setIsReview] = useCheckResultState(); // 결과 리뷰 상태 관리
   
 
   useEffect(() => {
@@ -27,6 +26,7 @@ function Checkresult() {
           navigate("/");
         }
       } catch (error) {
+        if (isAuthRequiredError(error)) return;
         console.error("Error fetching data:", error);
       }
     };

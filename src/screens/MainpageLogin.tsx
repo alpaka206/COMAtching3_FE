@@ -1,10 +1,9 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 
 import HeaderMain from "../components/HeaderMain";
 import UserInfoRrev from "../components/UserInfoRrev";
-import { charge, userState } from "../atoms";
+import { useChargeState, useUserState } from "../store/appStore";
 import { useNavigate } from "react-router-dom";
 import TotalUsersCounter from "../components/TotalUsersCounter";
 import BottomNavButton from "../components/BottomNavButton";
@@ -15,19 +14,20 @@ import Footer from "../components/Footer";
 import TutorialSlides from "../components/TutorialSlides";
 import HartButtonInfo from "../components/HartButtonInfo";
 import Background from "../components/Background";
-import instance from "../axiosConfig";
+import instance, { isAuthRequiredError } from "../axiosConfig";
 import AccountButtonInfo from "../components/AccountButtonInfo";
-import Cookies from "js-cookie"; // js-cookie import 추가
 import EventModal from "../components/EventModal";
-function MainpageLogin() {
+import { clearAuthTokens } from "../lib/authStorage";
+import { ROUTES } from "../routes";
+function MainpageLogin({ onLogout }) {
   const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅 사용
   const [isAccountClicked, setIsAccountClicked] = useState(false);
   const [isPointClicked, setIsPointClicked] = useState(false); // 포인트 충전 요청 토글 클릭 상태를 저장하는 상태 변수
   const [isHeartClicked, setIsHeartClicked] = useState(false); // 하트 충전 요청 토글 클릭 상태를 저장하는 상태 변수
   const [showTutorial, setShowTutorial] = useState(false); // Show tutorial on login
-  const [userInfo, setUserInfo] = useRecoilState(userState);
+  const [userInfo, setUserInfo] = useUserState();
   // 충전 요청 상태를 관리하는 Recoil 상태(너무 자주 못누르게 하기 위해서 임시방편이였습니다. 회의를 통해 방식 수정이 필요합니다)
-  const [chargeclick] = useRecoilState(charge);
+  const [chargeclick] = useChargeState();
   const [showEventModal, setShowEventModal] = useState(false);
   
   const handleAccountToggleClick = () => {
@@ -43,11 +43,9 @@ function MainpageLogin() {
     setIsHeartClicked((prevIsClicked) => !prevIsClicked);
   };
   const handleLogout = () => {
-    // 쿠키에서 Authorization, RefreshToken 제거
-    Cookies.remove("Authorization");
-    Cookies.remove("RefreshToken");
-    
-    window.location.reload();
+    clearAuthTokens();
+    onLogout?.();
+    navigate(ROUTES.home, { replace: true });
   };
   useEffect(() => {
     // eventokay가 false일 때만 모달을 띄웁니다.
@@ -111,16 +109,23 @@ function MainpageLogin() {
             numParticipants: response.data.data.participations,
             eventokay: response.data.data.event1,
           }));
-        }
-      } catch (error) {
-        Cookies.remove("Authorization");
-        Cookies.remove("RefreshToken");
-        console.error("Error fetching data:", error);
-        window.location.reload();
       }
+    } catch (error) {
+        if (
+          isAuthRequiredError(error) ||
+          error?.response?.status === 401 ||
+          error?.response?.status === 403
+        ) {
+          clearAuthTokens();
+          onLogout?.();
+          navigate(ROUTES.home, { replace: true });
+          return;
+        }
+        console.error("Error fetching data:", error);
+    }
     };
     fetchData();
-  }, [setUserInfo]);
+  }, [navigate, onLogout, setUserInfo]);
   const handleNotService = () => {
     alert("해당 서비스는 9/12일 10:00에 오픈됩니다 축제까지 기다려주세요!");
   };
@@ -289,9 +294,9 @@ function MainpageLogin() {
         {/* <div  style={{ height: '50px' }}></div> */}
       </div>
       <div className="logout-container">
-        <a href="#" onClick={handleLogout} className="logout-link">
+        <button type="button" onClick={handleLogout} className="logout-link">
           로그아웃
-        </a>
+        </button>
       </div>
       <Footer/>
       {/* <NavBar/> */}

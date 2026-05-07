@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import TotalUsersCounter from "../components/TotalUsersCounter";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Background from "../components/Background";
 import HeaderMain from "../components/HeaderMain";
+import { API_BASE_URL, publicInstance } from "../axiosConfig";
+import { ROUTES } from "../routes";
 // 로그인 되지 않은 메인페이지입니다.
 function MainpageUnLogin() {
   const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅 사용
@@ -15,14 +16,13 @@ function MainpageUnLogin() {
   // 일반적인 형식과 다를텐데 아래 링크로 이동시켜서 백엔드에서 카카오 로그인을 처리한뒤
   // Redirection페이지로 옮겨서 role을 확인하는 과정을 거쳤습니다.
   const handleLogin = () => {
-    window.location.href =
-      "https://cuk.comatching.site/oauth2/authorization/kakao";
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/kakao`;
     // alert("서비스 종료 ㅠㅠㅠㅠ");
   };
   
   // 서비스 이용법 안내 페이지로 이동하는 핸들러
   const handleVisitGuide = () => {
-    navigate("/guide");
+    navigate(ROUTES.guide);
   };
 
   // 참가자 수를 가져오는 비동기 함수
@@ -30,13 +30,13 @@ function MainpageUnLogin() {
     // 컴포넌트가 마운트될 때 API 요청을 보냄
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://cuk.comatching.site/api/participations");
+        const response = await publicInstance.get("/api/participations");
         
         if (response.status === 200) {
           setNumParticipants(response.data.data);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      } catch {
+        setNumParticipants(null);
       }
     };
     fetchData();
@@ -63,7 +63,7 @@ function MainpageUnLogin() {
         <div className="bubble" >
           ⚡️10초만에 빠른 가입⚡️
         </div>
-        <button className="kakao-login" onClick={handleLogin}>
+        <button className="kakao-login" type="button" onClick={handleLogin}>
             <div className="kakao-login-element">
               <img
                 src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/kakao.svg`}
@@ -75,9 +75,9 @@ function MainpageUnLogin() {
       </div>
       <div className="help-text">이용에 도움이 필요하신가요?</div>
         <div>
-          <a className="privacy-button" onClick={handleVisitGuide}>
+          <button className="privacy-button" type="button" onClick={handleVisitGuide}>
             서비스 이용법 안내
-          </a>
+          </button>
         </div>  
         <Footer /> 
         

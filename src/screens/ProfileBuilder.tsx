@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import HeaderNav from "../components/HeaderNav";
 import Footer from "../components/Footer";
 import { TypeAnimation } from "react-type-animation";
-import { useRecoilState } from "recoil";
-import { selectedMBTIState, userState } from "../atoms";
+import { useSelectedMbtiState, useUserState } from "../store/appStore";
 import { useNavigate } from "react-router-dom";
 import MemoizedShowQuestion from "../components/ShowQuestion";
 import AnswerBox from "../components/AnswerBox";
@@ -14,8 +13,8 @@ const initialShowQuestions = () => QUESTIONS.map(() => [false, false]);
 
 const ProfileBuilder = () => {
   const navigate = useNavigate();
-  const [selectedMBTI, setSelectedMBTI] = useRecoilState(selectedMBTIState); // 선택한 MBTI 저장
-  const [currentUserState, setCurrentUserState] = useRecoilState(userState); // 선택한 정보 저장
+  const [selectedMBTI, setSelectedMBTI] = useSelectedMbtiState(); // 선택한 MBTI 저장
+  const [currentUserState, setCurrentUserState] = useUserState(); // 선택한 정보 저장
   const [showQuestions, setShowQuestions] = useState(initialShowQuestions()); // 질문 보여줬는지, 대답이 보여졌는지 상태 확인
   const [chooseAnswer, setChooseAnswer] = useState(null); // 어떤 선택지를 골랐는지 저장
   const [questionNum, setQuestionNum] = useState(0); // 현재 몇번째 질문인지 저장
