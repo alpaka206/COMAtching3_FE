@@ -1,16 +1,15 @@
 // @ts-nocheck
 import { useState,useEffect} from "react";
-import { useRecoilState } from "recoil";
 import Background from "../components/Background";
 import { useNavigate } from "react-router-dom";
-import { userState } from "../atoms";
+import { useUserState } from "../store/appStore";
 // 스타일링을 위한 CSS 파일 생성
 import HeaderBackPoint from "../components/HeaderBackPoint";
 import HartConfirmationModal from "../components/HartConfirmModal";
 import instance from "../axiosConfig"; // axios 인스턴스 불러오기
 function Heart() {
   const navigate = useNavigate();
-  const [userPoint, setUserPoint] = useRecoilState(userState);
+  const [userPoint, setUserPoint] = useUserState();
   const [heartCount, setHeartCount] = useState(0); // 하트 갯수 상태 관리
   const [showModal, setShowModal] = useState(false); // 모달 상태 관리
   const calculateTotalAmount = (count) => {

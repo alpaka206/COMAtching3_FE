@@ -3,8 +3,7 @@ import { useEffect, useRef } from "react";
 import AdminRequestListContainer from "./AdminRequestListContainer";
 
 import * as styles from "../css/components/AdminRequestList.css";
-import { useRecoilState } from "recoil";
-import { adminRequests } from "../atoms";
+import { useAdminRequestsState } from "../store/appStore";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +28,7 @@ function getTokenFromCookie() {
 
 function AdminRequestList() {
   const navigate = useNavigate();
-  const [requests, setRequests] = useRecoilState(adminRequests);
+  const [requests, setRequests] = useAdminRequestsState();
   const stompClientRef = useRef<any>(null);
   useEffect(() => {
     console.log("requests: ", requests);

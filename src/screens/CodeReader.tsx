@@ -1,18 +1,20 @@
 // @ts-nocheck
-import { useState } from "react";
-import { QrReader } from "react-qr-reader";
+import { useRef, useState } from "react";
+import { Scanner } from "@yudiel/react-qr-scanner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { MatchPickState } from "../atoms";
+import { useMatchPickState } from "../store/appStore";
 // QR 코드 인식을 위한 페이지 입니다.
 const CodeReader = () => {
   const navigate = useNavigate();
   const [data, setData] = useState(""); // QR 코드에서 읽은 데이터 상태 관리
-  const [, setCodeState] = useRecoilState(MatchPickState); // Recoil 상태 관리 훅 사용
+  const [, setCodeState] = useMatchPickState();
+  const isSubmittingRef = useRef(false);
 
   // 서버로 해시 코드를 보내는 함수
   const sendHashCode = async (hashCode) => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     const response = await axios.get(
       `/comatching/code-req/admin?code=${hashCode}`
     );
@@ -28,6 +30,7 @@ const CodeReader = () => {
       }));
       navigate("/match");
     } else {
+      isSubmittingRef.current = false;
       throw new Error("Unexpected response code or status");
     }
   };
@@ -44,25 +47,23 @@ const CodeReader = () => {
     <div className="container">
       <div className="content">
         {/* 카메라로 QR 코드를 읽는 컴포넌트 */}
-        <QrReader
-          key="environment"
+        <Scanner
           constraints={{ facingMode: "environment" }}
-          onResult={(result, error) => {
-            if (result) {
-              setData(result?.text);
-              // 데이터에서 hashCode 추출
-              const hashCode = extractHashCode(result.text);
-              // 추출된 hashCode가 있을 경우 요청 보냄
-              if (hashCode) {
-                sendHashCode(hashCode);
-              }
-            }
-
-            if (error) {
-              console.info(error);
+          onScan={(detectedCodes) => {
+            const rawValue = detectedCodes[0]?.rawValue;
+            if (rawValue) {
+              setData(rawValue);
+              const hashCode = extractHashCode(rawValue);
+              if (hashCode) sendHashCode(hashCode);
             }
           }}
-          style={{ width: "100%", height: "100%" }}
+          onError={(error) => {
+            console.info(error);
+          }}
+          styles={{
+            container: { width: "100%", height: "100%" },
+            video: { width: "100%", height: "100%" },
+          }}
         />
         {/* 읽은 데이터 표시(서비스시 qr이 제대로 오는지, 인식을 했는지, 인터넷이 안되는건지 확인하기 위함) */}
         <p>{data}</p>

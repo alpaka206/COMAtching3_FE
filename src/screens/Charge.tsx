@@ -1,10 +1,9 @@
 // @ts-nocheck
 import { useState, useEffect  } from "react";
-import { useRecoilState } from "recoil";
 import Background from "../components/Background";
 import { useNavigate } from "react-router-dom";
 import HeaderBackPoint from "../components/HeaderBackPoint";
-import { userState } from "../atoms";
+import { useUserState } from "../store/appStore";
 import AccountButtonInfo from "../components/AccountButtonInfo";
 import instance from "../axiosConfig"; // axios 인스턴스 불러오기
 import ChargeConfirmationModal from "../components/ChargeConfirmationModal";// Modal 컴포넌트 불러오기
@@ -12,7 +11,7 @@ import ChargeConfirmationModal from "../components/ChargeConfirmationModal";// M
 function Charge() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [amount, setAmount] = useState("");
-  const [userPoint, setUserPoint] = useRecoilState(userState);
+  const [userPoint, setUserPoint] = useUserState();
   const [isAccountClicked, setIsAccountClicked] = useState(false);
   const [showModal, setShowModal] = useState(false); // Modal 상태 추가
   const navigate = useNavigate();

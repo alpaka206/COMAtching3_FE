@@ -1,9 +1,14 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
-import { useRecoilState , useResetRecoilState} from "recoil";
 import { useNavigate } from "react-router-dom";
 import Background from "../components/Background";
-import { MatchPickState, MatchResultState, userState } from "../atoms";
+import {
+  useMatchPickState,
+  useMatchResultState,
+  useResetMatchPickState,
+  useResetMatchResultState,
+  useUserState,
+} from "../store/appStore";
 import MatchOptionButtonclass from "../components/MatchOptionButton_Class";
 import MBTISection from "../components/MBTISection";
 import AgeButton from "../components/AgeButton";
@@ -13,19 +18,19 @@ import Loading from "./Loading";
 import HeaderBackPoint from "../components/HeaderBackPoint";
 import instance from "../axiosConfig";
 function Matching() {
-  const [MatchState, setMatchState] = useRecoilState(MatchPickState); // 뽑은 선택 리스트
-  const [userPoint, setUserPoint] = useRecoilState(userState);
+  const [MatchState, setMatchState] = useMatchPickState(); // 뽑은 선택 리스트
+  const [userPoint, setUserPoint] = useUserState();
   const [imagePosition, setImagePosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isMBTISelected, setIsMBTISelected] = useState(false); // MBTI 2개 선택 여부를 추적
   const startX = useRef(0);
   const [, setMatchPageResult] =
-    useRecoilState(MatchResultState); // 뽑기 결과 상태 관리
+    useMatchResultState(); // 뽑기 결과 상태 관리
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isButtonEnabled  , setIsButtonEnabled] = useState(false);
-  const resetMatchState = useResetRecoilState(MatchPickState);
-  const resetMatchResultState = useResetRecoilState(MatchResultState);
+  const resetMatchState = useResetMatchPickState();
+  const resetMatchResultState = useResetMatchResultState();
 
   useEffect(() => {
     // Fetch currentPoint from backend when component mounts

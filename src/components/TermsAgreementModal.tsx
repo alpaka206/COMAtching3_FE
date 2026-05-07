@@ -1,11 +1,13 @@
 // @ts-nocheck
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-
-Modal.setAppElement('#root');
 
 const TermsAgreementModal = ({ isOpen, onRequestClose, handleSubmit, registerCheck, setRegisterCheck }) => {
     const [isAgreementOpen, setIsAgreementOpen] = useState(false); // 개인정보 수집 안내 모달 상태
+
+    useEffect(() => {
+        Modal.setAppElement(document.body);
+    }, []);
 
     const handleCheckboxChange = (e) => {
         const { id, checked } = e.target;

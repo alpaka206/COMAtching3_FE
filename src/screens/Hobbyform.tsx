@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { userState } from "../atoms";
+import { useUserState } from "../store/appStore";
 import hobbyIcons from "../data/hobbyIcons";
 import HeaderMain from "../components/HeaderMain";
 import ProgressBar from "../components/Progressbar";
@@ -10,8 +9,8 @@ import MemoizedHobbyChoice from "../components/HobbyChoice";
 
 function Hobbyform() {
   const navigate = useNavigate();
-  const [user, setUser] = useRecoilState(userState); 
-  const [pickHobby, setPickHobby] = useRecoilState(userState);
+  const [user, setUser] = useUserState(); 
+  const [pickHobby, setPickHobby] = useUserState();
 
   const handleSubmit = () => {
     if (pickHobby.hobby.length < 1) {

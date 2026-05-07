@@ -2,8 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 // import { validateForm } from "../myfunction/formValidation";
 import instance from "../axiosConfig"; // axiosConfig 인스턴스 불러오기
-import { useRecoilState } from "recoil";
-import { userState, selectedMBTIState } from "../atoms";
+import { useSelectedMbtiState, useUserState } from "../store/appStore";
 import { useNavigate } from "react-router-dom";
 import MyInput from "../components/MyInput";
 import MajorSelector from "../components/MajorSelector";
@@ -16,15 +15,13 @@ import MBTISection from "../components/MBTISection";
 import AdmissionYearInput from "../components/AdmissionYearInput";
 import Background from "../components/Background";
 import ProgressBar from "../components/Progressbar";
-import Modal from "react-modal"; // Import react-modal
 import TermsAgreementModal from "../components/TermsAgreementModal"; 
 import HeaderMain from "../components/HeaderMain";
-Modal.setAppElement("#root");
 
 function Userinfo() {
     const navigate = useNavigate();
-    const [user, setUser] = useRecoilState(userState); // 유저 상태 관리
-    const [selectedMBTI, setSelectedMBTI] = useRecoilState(selectedMBTIState);
+    const [user, setUser] = useUserState(); // 유저 상태 관리
+    const [selectedMBTI, setSelectedMBTI] = useSelectedMbtiState();
     const [checkMethod, setCheckMethod] = useState({
         school: "",
         department: "",

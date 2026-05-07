@@ -3,8 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 import Background from "../components/Background";
 import HeaderBackPoint from "../components/HeaderBackPoint";
 import Footer from "../components/Footer";
-import { useRecoilState } from "recoil";
-import { MatchResultState, MatchPickState, userState } from "../atoms";
+import {
+  useMatchPickState,
+  useMatchResultState,
+  useUserState,
+} from "../store/appStore";
 import { useNavigate } from "react-router-dom";
 import hobbyIcons from "../data/hobbyIcons";
 import Loading from "./Loading";
@@ -13,10 +16,10 @@ import instance from "../axiosConfig"; // axios 인스턴스 불러오기
 
 function Matchresult() {
   const navigate = useNavigate();
-  const [MatchState] = useRecoilState(MatchPickState);
-  const [MatchResult, setMatchResult] = useRecoilState(MatchResultState);
+  const [MatchState] = useMatchPickState();
+  const [MatchResult, setMatchResult] = useMatchResultState();
 
-  const [resultPoint, setResultPoint] = useRecoilState(userState);
+  const [resultPoint, setResultPoint] = useUserState();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
