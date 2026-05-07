@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import '../css/components/Navbar.css'; // 별도의 CSS 파일을 사용한다고 가정
 
 const NavBar = () => {
   const location = useLocation();

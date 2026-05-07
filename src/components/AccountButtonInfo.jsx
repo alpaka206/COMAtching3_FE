@@ -1,5 +1,4 @@
 import React from 'react';
-import "../css/components/AccountButtonInfo.css";
 function AccountButtonInfo({handleToggleClick,accountNumber}) {
     
 

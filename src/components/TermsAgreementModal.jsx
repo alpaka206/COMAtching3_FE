@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import '../css/components/TermsAgreementModal.css';
 
 Modal.setAppElement('#root');
 

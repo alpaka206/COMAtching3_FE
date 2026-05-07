@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "../css/components/HartConfirmModal.css"; // 스타일링 파일 불러오기
 
 function HartConfirmationModal({ totalAmount,heartCount,remainingPoint, onConfirm, onCancel }) {
   const [isChecked, setIsChecked] = useState(false);

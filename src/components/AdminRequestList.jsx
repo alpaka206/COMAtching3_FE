@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../css/components/AdminRequestList.css"; // 스타일 파일 경로 확인
 import AdminRequestListContainer from "./AdminRequestListContainer";
 
 import * as styles from "../css/components/AdminRequestList.css";
