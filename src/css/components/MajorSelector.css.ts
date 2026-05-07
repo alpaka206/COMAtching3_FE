@@ -34,3 +34,5 @@ export const majorSelectorElementSelect = style({
   padding: '0 12px',
 
 });
+
+export const majorSelectorElementOption = style({});

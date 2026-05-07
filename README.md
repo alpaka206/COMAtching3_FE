@@ -1,8 +1,49 @@
-# React + Vite
+# COMAtching3 FE
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+COMAtching 프론트엔드 저장소.
 
-Currently, two official plugins are available:
+## 개발 환경
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Next.js App Router + TypeScript 기반
+- Node.js 20 사용
+- 패키지 매니저는 npm 사용
+- 기존 QR 라이브러리 peer dependency 충돌 때문에 `.npmrc`의 `legacy-peer-deps=true` 기준 설치
+- Firebase 배포 설정 사용 안 함
+
+```bash
+npm ci
+npm run dev
+```
+
+## 검증
+
+```bash
+npm run lint
+npm run build
+```
+
+린트는 경고 없이 통과하는 상태 유지.
+
+## 라우팅 구조
+
+- `src/app`: Next.js App Router 라우트
+- `src/screens`: App Router 라우트에서 연결하는 클라이언트 화면
+- `src/app/providers.tsx`: RecoilRoot, 브라우저 외부 열기 처리
+- `src/lib/react-router-dom.tsx`: 기존 `react-router-dom` 사용처를 Next 라우터로 연결하는 호환 레이어
+
+브라우저 전용 화면은 `dynamic(..., { ssr: false })` 기준으로 연결.
+
+## 브랜치 흐름
+
+기본 흐름은 `main -> develop -> 이슈 브랜치`.
+
+- 기능/수정 작업은 `develop`에서 이슈 브랜치 생성
+- 작업 PR은 이슈 브랜치에서 `develop`으로 생성
+- 배포 PR만 `develop`에서 `main`으로 생성
+
+## 작성 규칙
+
+- 커밋/PR/이슈 제목은 한국어 명사형 사용
+- 예시: `feat: 매칭 결과 화면 구현`
+- 예시: `fix: 로그인 리다이렉트 오류 수정`
+- 자세한 규칙은 [CONTRIBUTING.md](./CONTRIBUTING.md) 확인

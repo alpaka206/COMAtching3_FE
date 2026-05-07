@@ -1,0 +1,52 @@
+name: PR 규칙 확인
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+    branches:
+      - develop
+      - main
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  policy:
+    name: 대상 브랜치와 제목 확인
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: PR 규칙 검사
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+
+          title_pattern='^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\([a-zA-Z0-9._/-]+\))?: .+ (구현|수정|개선|정리|삭제|추가|변경|대응|분리|연동|설정|보완|마이그레이션)$'
+          branch_pattern='^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|hotfix|release)/[a-z0-9._-]+$'
+
+          if [[ ! "$PR_TITLE" =~ $title_pattern ]]; then
+            echo "::error::PR 제목은 'feat: 매칭 결과 화면 구현' 또는 'fix: 로그인 오류 수정' 같은 형식 필요"
+            exit 1
+          fi
+
+          if [[ "$BASE_REF" == "main" ]]; then
+            if [[ "$HEAD_REF" != "develop" ]]; then
+              echo "::error::main 대상 PR은 develop 브랜치에서만 생성"
+              exit 1
+            fi
+          elif [[ "$BASE_REF" == "develop" ]]; then
+            if [[ ! "$HEAD_REF" =~ $branch_pattern ]]; then
+              echo "::error::develop 대상 PR은 type/short-description 형식의 이슈 브랜치에서 생성"
+              exit 1
+            fi
+          else
+            echo "::error::PR 대상 브랜치는 develop 또는 main만 허용"
+            exit 1
+          fi
