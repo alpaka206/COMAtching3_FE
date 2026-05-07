@@ -14,13 +14,32 @@ function AdminRequestList() {
   const navigate = useNavigate();
   const [requests, setRequests] = useAdminRequestsState();
   const stompClientRef = useRef<any>(null);
+  const socketRef = useRef<any>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
+    const disconnectWebSocket = () => {
+      const client = stompClientRef.current;
+      const socket = socketRef.current;
+
+      if (client?.connected) {
+        client.disconnect();
+      } else {
+        socket?.close?.();
+      }
+
+      stompClientRef.current = null;
+      socketRef.current = null;
+    };
+
     const connectWebSocket = async () => {
       const authorization = getAuthorizationHeader();
 
       if (!authorization) {
-        navigate(ROUTES.adminLogin);
+        if (isMounted) {
+          navigate(ROUTES.adminLogin);
+        }
         return;
       }
 
@@ -28,18 +47,28 @@ function AdminRequestList() {
         import("sockjs-client"),
         import("stompjs"),
       ]);
+
+      if (!isMounted) return;
+
       const Stomp = stompModule.default ?? stompModule;
       const socket = new SockJS(`${API_BASE_URL}/wss`);
       const client = Stomp.over(socket);
 
+      socketRef.current = socket;
+      stompClientRef.current = client;
       client.debug = null;
       client.connect(
         { Authorization: authorization },
         () => {
-          stompClientRef.current = client;
+          if (!isMounted) {
+            disconnectWebSocket();
+            return;
+          }
 
           // 충전 요청 구독
           client.subscribe("/topic/chargeRequests", (message) => {
+            if (!isMounted) return;
+
             const chargeRequests = JSON.parse(message.body);
             // updateRequestsWithoutDuplicates(chargeRequests);
             setRequests((prevRequests) => {
@@ -55,6 +84,8 @@ function AdminRequestList() {
 
           // 승인 업데이트 구독
           client.subscribe("/topic/approvalUpdate", (message) => {
+            if (!isMounted) return;
+
             const userId = message.body;
             setRequests((prevRequests) => {
               return [
@@ -63,6 +94,8 @@ function AdminRequestList() {
             });
           });
           client.subscribe("/topic/cancelUpdate", (message) => {
+            if (!isMounted) return;
+
             const userId = message.body;
             setRequests((prevRequests) => {
               return [
@@ -72,7 +105,9 @@ function AdminRequestList() {
           });
         },
         (error) => {
-          console.error("Error connecting to WebSocket", error);
+          if (isMounted) {
+            console.error("Error connecting to WebSocket", error);
+          }
         }
       );
     };
@@ -88,10 +123,8 @@ function AdminRequestList() {
     initializeWebSocket();
 
     return () => {
-      const client = stompClientRef.current;
-      if (client && client.connected) {
-        client.disconnect();
-      }
+      isMounted = false;
+      disconnectWebSocket();
     };
   }, [navigate, setRequests]); // 빈 의존성 배열로 한 번만 실행
   function handleAction(userId, amount, actionType) {
