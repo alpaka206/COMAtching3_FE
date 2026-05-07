@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     description: 'University matching service for festival events',
     images: ['/assets/ogimage.png'],
   },
+  icons: {
+    icon: '/assets/favicon.svg',
+  },
 }
 
 export const viewport: Viewport = {
