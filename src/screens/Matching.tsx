@@ -450,7 +450,7 @@ function Matching() {
                   money={200}
                   handleButtonClick={(e) => {
                     e.stopPropagation(); // 이벤트 전파 중지
-                    handleButtonClick(0, 100);
+                    handleButtonClick(3, 200);
                   }}
                 />
               </div>

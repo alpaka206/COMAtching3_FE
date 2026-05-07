@@ -4,8 +4,6 @@ import AdminRequestListContainer from "./AdminRequestListContainer";
 
 import * as styles from "../css/components/AdminRequestList.css";
 import { useAdminRequestsState } from "../store/appStore";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "./Adminnavbar";
 import { ROUTES } from "../routes";
@@ -16,31 +14,33 @@ function AdminRequestList() {
   const navigate = useNavigate();
   const [requests, setRequests] = useAdminRequestsState();
   const stompClientRef = useRef<any>(null);
-  useEffect(() => {
-    console.log("requests: ", requests);
-  }, [requests]);
+
   useEffect(() => {
     const connectWebSocket = async () => {
-      const socket = new SockJS(`${API_BASE_URL}/wss`);
-      
-      const client = Stomp.over(socket);
       const authorization = getAuthorizationHeader();
+
       if (!authorization) {
         navigate(ROUTES.adminLogin);
         return;
       }
+
+      const [{ default: SockJS }, stompModule] = await Promise.all([
+        import("sockjs-client"),
+        import("stompjs"),
+      ]);
+      const Stomp = stompModule.default ?? stompModule;
+      const socket = new SockJS(`${API_BASE_URL}/wss`);
+      const client = Stomp.over(socket);
+
       client.debug = null;
       client.connect(
         { Authorization: authorization },
-        (frame) => {
-          console.log("Connected: " + frame);
-
+        () => {
           stompClientRef.current = client;
 
           // 충전 요청 구독
           client.subscribe("/topic/chargeRequests", (message) => {
             const chargeRequests = JSON.parse(message.body);
-            console.log(chargeRequests);
             // updateRequestsWithoutDuplicates(chargeRequests);
             setRequests((prevRequests) => {
               return [
@@ -56,7 +56,6 @@ function AdminRequestList() {
           // 승인 업데이트 구독
           client.subscribe("/topic/approvalUpdate", (message) => {
             const userId = message.body;
-            console.log("userId:", userId);
             setRequests((prevRequests) => {
               return [
                 ...prevRequests.filter((request) => request.userId !== userId),
@@ -65,7 +64,6 @@ function AdminRequestList() {
           });
           client.subscribe("/topic/cancelUpdate", (message) => {
             const userId = message.body;
-            console.log("userId:", userId);
             setRequests((prevRequests) => {
               return [
                 ...prevRequests.filter((request) => request.userId !== userId),
@@ -92,9 +90,7 @@ function AdminRequestList() {
     return () => {
       const client = stompClientRef.current;
       if (client && client.connected) {
-        client.disconnect(() => {
-          console.log("Disconnected");
-        });
+        client.disconnect();
       }
     };
   }, [navigate, setRequests]); // 빈 의존성 배열로 한 번만 실행
