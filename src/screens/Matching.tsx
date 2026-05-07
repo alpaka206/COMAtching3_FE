@@ -7,7 +7,6 @@ import {
   useMatchResultState,
   useResetMatchPickState,
   useResetMatchResultState,
-  useUserState,
 } from "../store/appStore";
 import MatchOptionButtonclass from "../components/MatchOptionButton_Class";
 import MBTISection from "../components/MBTISection";
@@ -16,10 +15,12 @@ import MatchOptionButton from "../components/MatchOptionButton";
 import hobbyIcons from "../data/hobbyIcons"; // 취미 아이콘 데이터 가져오기
 import Loading from "./Loading";
 import HeaderBackPoint from "../components/HeaderBackPoint";
-import instance, { isAuthRequiredError } from "../axiosConfig";
+import instance from "../axiosConfig";
+import { createMatchRequestPayload } from "../features/matching/createMatchRequestPayload";
+import { useCurrentPoint } from "../hooks/useCurrentPoint";
 function Matching() {
   const [MatchState, setMatchState] = useMatchPickState();
-  const [userPoint, setUserPoint] = useUserState();
+  const [userPoint, setUserPoint] = useCurrentPoint();
   const [imagePosition, setImagePosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isMBTISelected, setIsMBTISelected] = useState(false); // MBTI 2개 선택 여부를 추적
@@ -31,26 +32,6 @@ function Matching() {
   const [isButtonEnabled  , setIsButtonEnabled] = useState(false);
   const resetMatchState = useResetMatchPickState();
   const resetMatchResultState = useResetMatchResultState();
-
-  useEffect(() => {
-    // Fetch currentPoint from backend when component mounts
-    const fetchCurrentPoint = async () => {
-      try {
-        const response = await instance.get("/auth/user/api/currentPoint");
-        
-        // Assuming response.data.currentPoint is the point value you want to set in Recoil
-        setUserPoint((prev) => ({
-          ...prev,
-          point: response.data.data.currentPoint, // Update the point in Recoil
-        }));
-      } catch (error) {
-        if (isAuthRequiredError(error)) return;
-        console.error("Failed to fetch currentPoint:", error);
-      }
-    };
-
-    fetchCurrentPoint();
-}, [setUserPoint]); 
 
   useEffect(() => {
     const isAgeSelected = MatchState.isUseOption[0] ? (MatchState.formData.ageOption || "") !== "" : true;
@@ -139,21 +120,7 @@ function Matching() {
       // 다음 단계로 이동 로직 추가
     }
 
-    const FormData = {
-      ageOption: MatchState.isUseOption[0]
-        ? MatchState.formData.ageOption
-        : "UNSELECTED",
-      mbtiOption: MatchState.selectedMBTI
-        .filter((letter) => letter !== "X")
-        .join(","),
-      hobbyOption: MatchState.isUseOption[2]
-        ? MatchState.formData.hobbyOption
-        : ["UNSELECTED"],
-      contactFrequencyOption: MatchState.isUseOption[1]
-        ? MatchState.formData.contactFrequencyOption
-        : "UNSELECTED",
-      sameMajorOption: MatchState.isUseOption[3] ? true : false,
-    };
+    const FormData = createMatchRequestPayload(MatchState);
     setMatchState((prev) => ({
       ...prev,
       formData: {
