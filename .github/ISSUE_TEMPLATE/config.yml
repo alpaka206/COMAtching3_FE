@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 질문 또는 논의
+    url: https://github.com/alpaka206/COMAtching3_FE/discussions
+    about: 구현 전 논의가 필요한 내용 정리
