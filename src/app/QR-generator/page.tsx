@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const QRGenerator = dynamic(() => import('@/legacy-pages/QRGenerator'), {
+const QRGenerator = dynamic(() => import('@/screens/QRGenerator'), {
   ssr: false,
 })
 

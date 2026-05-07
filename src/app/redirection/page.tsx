@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const Redirection = dynamic(() => import('@/legacy-pages/RedirectionPage'), {
+const Redirection = dynamic(() => import('@/screens/RedirectionPage'), {
   ssr: false,
 })
 

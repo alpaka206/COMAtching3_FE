@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const Hobbyform = dynamic(() => import('@/legacy-pages/Hobbyform'), {
+const Hobbyform = dynamic(() => import('@/screens/Hobbyform'), {
   ssr: false,
 })
 

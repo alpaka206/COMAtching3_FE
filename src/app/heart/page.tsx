@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const Heart = dynamic(() => import('@/legacy-pages/Heart'), { ssr: false })
+const Heart = dynamic(() => import('@/screens/Heart'), { ssr: false })
 
 export default function Page() {
   return <Heart />
