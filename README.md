@@ -22,16 +22,16 @@ npm run lint
 npm run build
 ```
 
-현재 린트는 레거시 코드 복구를 위해 경고 중심 운영.
+린트는 경고 없이 통과하는 상태 유지.
 
 ## 라우팅 구조
 
 - `src/app`: Next.js App Router 라우트
-- `src/legacy-pages`: 기존 Vite 화면을 보존한 레거시 화면
+- `src/screens`: App Router 라우트에서 연결하는 클라이언트 화면
 - `src/app/providers.tsx`: RecoilRoot, 브라우저 외부 열기 처리
 - `src/lib/react-router-dom.tsx`: 기존 `react-router-dom` 사용처를 Next 라우터로 연결하는 호환 레이어
 
-기존 화면은 브라우저 전용 코드가 많아서 `dynamic(..., { ssr: false })` 기준으로 연결.
+브라우저 전용 화면은 `dynamic(..., { ssr: false })` 기준으로 연결.
 
 ## 브랜치 흐름
 

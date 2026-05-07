@@ -12,8 +12,8 @@
 ## 기술 기준
 
 - Next.js App Router + TypeScript 기준 작업.
-- 기존 JSX 화면은 `src/legacy-pages`에 보존.
-- 신규 화면/공용 코드는 가능하면 `.tsx`로 작성.
+- 화면 구현은 `src/screens`의 `.tsx` 파일 기준으로 작성.
+- 신규 화면/공용 코드는 `.tsx` 또는 JSX가 없는 경우 `.ts`로 작성.
 - 기존 `react-router-dom` 사용처는 `src/lib/react-router-dom.tsx` 호환 레이어 기준 연결.
 - 브라우저 전용 레거시 화면은 `dynamic(..., { ssr: false })` 기준 연결.
 - 스타일은 기존 CSS/vanilla-extract 유지, 필요 시 점진 개선.
@@ -61,4 +61,4 @@
 - 빌드 확인: `npm run build`
 - 린트 확인: `npm run lint`
 - 기존 QR 라이브러리 peer dependency 충돌 때문에 `.npmrc`의 `legacy-peer-deps=true` 유지.
-- 현재 린트는 레거시 코드 복구를 위해 경고 중심 운영.
+- 린트는 경고 없이 통과하는 상태 유지.
