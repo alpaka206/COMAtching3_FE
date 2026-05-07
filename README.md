@@ -4,9 +4,10 @@ COMAtching 프론트엔드 저장소.
 
 ## 개발 환경
 
+- Next.js App Router + TypeScript 기반
 - Node.js 20 사용
 - 패키지 매니저는 npm 사용
-- 기존 QR 라이브러리 peer dependency 충돌 때문에 `.npmrc`의 `legacy-peer-deps=true` 기준으로 설치
+- 기존 QR 라이브러리 peer dependency 충돌 때문에 `.npmrc`의 `legacy-peer-deps=true` 기준 설치
 - Firebase 배포 설정 사용 안 함
 
 ```bash
@@ -17,11 +18,20 @@ npm run dev
 ## 검증
 
 ```bash
-npm run build
 npm run lint
+npm run build
 ```
 
-현재 린트는 레거시 코드 복구를 위해 경고 중심으로 운영.
+현재 린트는 레거시 코드 복구를 위해 경고 중심 운영.
+
+## 라우팅 구조
+
+- `src/app`: Next.js App Router 라우트
+- `src/legacy-pages`: 기존 Vite 화면을 보존한 레거시 화면
+- `src/app/providers.tsx`: RecoilRoot, 브라우저 외부 열기 처리
+- `src/lib/react-router-dom.tsx`: 기존 `react-router-dom` 사용처를 Next 라우터로 연결하는 호환 레이어
+
+기존 화면은 브라우저 전용 코드가 많아서 `dynamic(..., { ssr: false })` 기준으로 연결.
 
 ## 브랜치 흐름
 

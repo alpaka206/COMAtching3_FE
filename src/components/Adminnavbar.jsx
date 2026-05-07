@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../css/components/AdminNavbar.css";
 
 function AdminNavbar() {
   const [activeMenu, setActiveMenu] = useState("main");

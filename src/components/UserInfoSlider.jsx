@@ -1,6 +1,5 @@
 // import React from "react";
 import UserInfoContainer from "./UserInfoContainer";
-import "../css/components/UserInfoSlider.css";
 
 function UserInfoSlider({ leftBoxData, rightBoxData }) {
   return (

@@ -1,5 +1,4 @@
 import React from "react";
-import "../css/components/EventModal.css"; // You will create this CSS file to style the modal
 
 const EventModal = ({ onParticipate, onCancel }) => {
   return (

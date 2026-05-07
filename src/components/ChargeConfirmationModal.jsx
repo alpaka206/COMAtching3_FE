@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "../css/components/ChargeConfirmationModal.css"; // 스타일링 파일 불러오기
 
 function ChargeConfirmationModal({ amount, onConfirm, onCancel,accountNumber }) {
   const [isChecked, setIsChecked] = useState(false);

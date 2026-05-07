@@ -1,5 +1,4 @@
 import React from "react";
-import "../css/components/SwipeButton.css";
 
 function SwipeButton({ isReady, onSwipe }) {
     const handleSwipe = () => {

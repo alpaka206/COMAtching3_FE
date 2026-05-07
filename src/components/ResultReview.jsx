@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "../css/components/ResultReview.css";
 import Rating from "@mui/material/Rating";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

@@ -4,9 +4,9 @@
 
 1. `main`은 운영 기준 브랜치로 유지.
 2. `develop`은 통합 개발 브랜치로 사용.
-3. 모든 작업은 `develop`에서 이슈 브랜치를 생성.
+3. 모든 작업은 `develop`에서 이슈 브랜치 생성.
 4. 작업 완료 후 이슈 브랜치에서 `develop`으로 PR 생성.
-5. 배포 준비가 끝나면 `develop`에서 `main`으로 PR 생성.
+5. 배포 준비 완료 후 `develop`에서 `main`으로 PR 생성.
 
 ```bash
 git switch develop
@@ -72,4 +72,4 @@ npm run lint
 ```
 
 기존 QR 라이브러리의 React peer dependency 충돌 때문에 npm 설치는 `.npmrc` 기준 사용.
-현재 린트는 레거시 코드 복구를 위해 경고 중심으로 운영.
+현재 린트는 레거시 코드 복구를 위해 경고 중심 운영.

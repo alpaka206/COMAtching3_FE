@@ -11,6 +11,9 @@ on:
       - develop
       - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   policy:
     name: 대상 브랜치와 제목 확인
@@ -25,7 +28,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          title_pattern='^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\([a-zA-Z0-9._/-]+\))?: .+ (구현|수정|개선|정리|삭제|추가|변경|대응|분리|연동|설정|보완)$'
+          title_pattern='^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\([a-zA-Z0-9._/-]+\))?: .+ (구현|수정|개선|정리|삭제|추가|변경|대응|분리|연동|설정|보완|마이그레이션)$'
           branch_pattern='^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|hotfix|release)/[a-z0-9._-]+$'
 
           if [[ ! "$PR_TITLE" =~ $title_pattern ]]; then
