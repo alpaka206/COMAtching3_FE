@@ -11,7 +11,7 @@ import { useCurrentPoint } from "../hooks/useCurrentPoint";
 function Charge() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [amount, setAmount] = useState("");
-  const [userPoint] = useCurrentPoint();
+  const [currentPoint] = useCurrentPoint();
   const [isAccountClicked, setIsAccountClicked] = useState(false);
   const [showModal, setShowModal] = useState(false); // Modal 상태 추가
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ function Charge() {
   };
   return (
     <div className="container">
-      <HeaderBackPoint currentPoint={userPoint.point} />
+      <HeaderBackPoint currentPoint={currentPoint} />
       <Background />
       {isAccountClicked ? (
         <AccountButtonInfo

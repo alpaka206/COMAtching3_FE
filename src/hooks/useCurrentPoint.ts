@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
 import instance, { isAuthRequiredError } from "../axiosConfig";
-import { useUserState } from "../store/appStore";
+import { useUserPointState } from "../store/appStore";
 
 export function useCurrentPoint() {
-  const [userPoint, setUserPoint] = useUserState();
+  const [currentPoint, setUserPoint] = useUserPointState();
 
   useEffect(() => {
     const fetchCurrentPoint = async () => {
@@ -24,5 +24,5 @@ export function useCurrentPoint() {
     fetchCurrentPoint();
   }, [setUserPoint]);
 
-  return [userPoint, setUserPoint] as const;
+  return [currentPoint, setUserPoint] as const;
 }

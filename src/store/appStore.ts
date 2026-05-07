@@ -209,6 +209,13 @@ export function useUserState() {
   ] as const;
 }
 
+export function useUserPointState() {
+  return [
+    useAppStore((state) => state.user.point),
+    useAppStore((state) => state.setUser),
+  ] as const;
+}
+
 export function useSelectedMbtiState() {
   return [
     useAppStore((state) => state.selectedMBTI),

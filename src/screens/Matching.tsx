@@ -20,29 +20,31 @@ import { createMatchRequestPayload } from "../features/matching/createMatchReque
 import { useCurrentPoint } from "../hooks/useCurrentPoint";
 function Matching() {
   const [MatchState, setMatchState] = useMatchPickState();
-  const [userPoint, setUserPoint] = useCurrentPoint();
+  const [currentPoint, setUserPoint] = useCurrentPoint();
   const [imagePosition, setImagePosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isMBTISelected, setIsMBTISelected] = useState(false); // MBTI 2개 선택 여부를 추적
   const startX = useRef(0);
+  const imagePositionRef = useRef(0);
+  const animationFrameRef = useRef(null);
   const [, setMatchPageResult] =
     useMatchResultState();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [isButtonEnabled  , setIsButtonEnabled] = useState(false);
   const resetMatchState = useResetMatchPickState();
   const resetMatchResultState = useResetMatchResultState();
+  const isAgeSelected = MatchState.isUseOption[0] ? (MatchState.formData.ageOption || "") !== "" : true;
+  const isContactFrequencySelected = MatchState.isUseOption[1] ? (MatchState.formData.contactFrequencyOption || "") !== "" : true;
+  const isHobbySelected = MatchState.isUseOption[2] ? (MatchState.formData.hobbyOption || []).length > 0 : true;
+  const isButtonEnabled = isMBTISelected && isAgeSelected && isContactFrequencySelected && isHobbySelected;
 
   useEffect(() => {
-    const isAgeSelected = MatchState.isUseOption[0] ? (MatchState.formData.ageOption || "") !== "" : true;
-    const isContactFrequencySelected = MatchState.isUseOption[1] ? (MatchState.formData.contactFrequencyOption || "") !== "" : true;
-  
-    // hobbyOption이 undefined일 경우 빈 배열로 처리
-    const isHobbySelected = MatchState.isUseOption[2] ? (MatchState.formData.hobbyOption || []).length > 0 : true;
-    
-    // 버튼 활성화 로직
-    setIsButtonEnabled(isMBTISelected && isAgeSelected && isContactFrequencySelected && isHobbySelected);
-  }, [MatchState, isMBTISelected]);
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
   const handleHobbyClick = (index) => {
     const isAlreadySelected = MatchState.formData.hobbyOption.includes(index);
     const updatedHobbies = isAlreadySelected
@@ -63,8 +65,31 @@ function Matching() {
     resetMatchState();
     resetMatchResultState();
   }, [resetMatchState, resetMatchResultState]);
+
+  const updateImagePosition = (nextPosition) => {
+    imagePositionRef.current = nextPosition;
+
+    if (animationFrameRef.current !== null) return;
+
+    animationFrameRef.current = requestAnimationFrame(() => {
+      setImagePosition(imagePositionRef.current);
+      animationFrameRef.current = null;
+    });
+  };
+
+  const resetImagePosition = () => {
+    imagePositionRef.current = 0;
+
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    setImagePosition(0);
+  };
+
   const handleStart = (e) => {
-    if (MatchState.point > userPoint.point) {
+    if (MatchState.point > currentPoint) {
       alert("포인트가 부족합니다!!");
       return; // 동작 중단
     }
@@ -75,21 +100,21 @@ function Matching() {
   };
 
   const handleMove = (e) => {
-    if (MatchState.point > userPoint.point) {
+    if (MatchState.point > currentPoint) {
       alert("포인트가 부족합니다!!");
       return; // 동작 중단
     }
     if (isDragging) {
       const clientX = e.type === "mousemove" ? e.clientX : e.touches[0].clientX;
       const deltaX = clientX - startX.current;
-      const newPosition = Math.min(Math.max(0, imagePosition + deltaX), 252); // 252는 이동 가능한 최대 위치
-      setImagePosition(newPosition);
+      const newPosition = Math.min(Math.max(0, imagePositionRef.current + deltaX), 252); // 252는 이동 가능한 최대 위치
+      updateImagePosition(newPosition);
       startX.current = clientX; // 현재 위치 업데이트
     }
   };
   const handleEnd = async () => {
     if (!isDragging) return;
-    if (MatchState.point > userPoint.point) {
+    if (MatchState.point > currentPoint) {
       alert("포인트가 부족합니다!!");
       return; // 동작 중단
     }
@@ -108,14 +133,14 @@ function Matching() {
 
     if (!isAgeSelected) {
       alert("나이를 선택해 주세요.");
-      setImagePosition(0); // 이미지 위치 초기화
+      resetImagePosition(); // 이미지 위치 초기화
     } else if (!isContactFrequencySelected) {
       alert("연락 빈도를 선택해 주세요.");
-      setImagePosition(0); // 이미지 위치 초기화
+      resetImagePosition(); // 이미지 위치 초기화
     } else if (!isHobbySelected) {
       alert("취미를 선택해 주세요.(최대 5개");
-      setImagePosition(0); // 이미지 위치 초기화
-    } else if (imagePosition >= 252) {
+      resetImagePosition(); // 이미지 위치 초기화
+    } else if (imagePositionRef.current >= 252) {
       alert("다음 단계로 이동합니다."); // 이동 완료 후 원하는 동작 수행
       // 다음 단계로 이동 로직 추가
     }
@@ -241,7 +266,7 @@ function Matching() {
       ) : (
         <div className="container">
           <Background />
-          <HeaderBackPoint currentPoint={userPoint.point} />
+          <HeaderBackPoint currentPoint={currentPoint} />
           <div className="matchcontent">
             <div className="match-title">
               <div className="match-title-text">Matching</div>
@@ -494,7 +519,9 @@ function Matching() {
                 } // 이미지 변경
                 alt=""
                 style={{
-                  left: `${imagePosition}px`,
+                  transform: `translateX(${imagePosition}px)`,
+                  willChange: isDragging ? "transform" : "auto",
+                  touchAction: isButtonEnabled ? "none" : "auto",
                   cursor: isButtonEnabled   ? "pointer" : "not-allowed",
                 }} // 커서 변경
                 onMouseDown={handleStart}

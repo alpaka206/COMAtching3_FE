@@ -1,20 +1,6 @@
-// @ts-nocheck
-import { useState, useEffect } from "react";
 import HeaderNav from "../components/HeaderNav";
 
 const Loading = () => {
-  const [offset, setOffset] = useState(-100);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setOffset((prevOffset) => (prevOffset < 100 ? prevOffset + 1 : -100));
-    }, 15);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
   return (
     <div className="container">
       <HeaderNav />
@@ -25,18 +11,9 @@ const Loading = () => {
           비슷한 매칭 상대를 찾고 있어요..
         </div>
         <div className="LoadingBar">
-          <div
-            className="GradientBar firstloadingbar"
-            style={{ backgroundPosition: `${offset}% 0` }}
-          />
-          <div
-            className="GradientBar secondloadingbar"
-            style={{ backgroundPosition: `${offset}% 0` }}
-          />
-          <div
-            className="GradientBar thirdloadingbar"
-            style={{ backgroundPosition: `${offset}% 0` }}
-          />
+          <div className="GradientBar firstloadingbar" />
+          <div className="GradientBar secondloadingbar" />
+          <div className="GradientBar thirdloadingbar" />
         </div>
       </div>
     </div>
