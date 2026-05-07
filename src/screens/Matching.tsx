@@ -18,14 +18,14 @@ import Loading from "./Loading";
 import HeaderBackPoint from "../components/HeaderBackPoint";
 import instance, { isAuthRequiredError } from "../axiosConfig";
 function Matching() {
-  const [MatchState, setMatchState] = useMatchPickState(); // 뽑은 선택 리스트
+  const [MatchState, setMatchState] = useMatchPickState();
   const [userPoint, setUserPoint] = useUserState();
   const [imagePosition, setImagePosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isMBTISelected, setIsMBTISelected] = useState(false); // MBTI 2개 선택 여부를 추적
   const startX = useRef(0);
   const [, setMatchPageResult] =
-    useMatchResultState(); // 뽑기 결과 상태 관리
+    useMatchResultState();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isButtonEnabled  , setIsButtonEnabled] = useState(false);
@@ -53,8 +53,8 @@ function Matching() {
 }, [setUserPoint]); 
 
   useEffect(() => {
-    const isAgeSelected = MatchState.isUseOption[0] ? (MatchState.formData.age_option || "") !== "" : true;
-    const isContactFrequencySelected = MatchState.isUseOption[1] ? (MatchState.formData.contact_frequency_option || "") !== "" : true;
+    const isAgeSelected = MatchState.isUseOption[0] ? (MatchState.formData.ageOption || "") !== "" : true;
+    const isContactFrequencySelected = MatchState.isUseOption[1] ? (MatchState.formData.contactFrequencyOption || "") !== "" : true;
   
     // hobbyOption이 undefined일 경우 빈 배열로 처리
     const isHobbySelected = MatchState.isUseOption[2] ? (MatchState.formData.hobbyOption || []).length > 0 : true;
@@ -79,11 +79,9 @@ function Matching() {
     }));
   };
   useEffect(() => {
-    // 컴포넌트가 마운트될 때 Recoil 상태 초기화
-    resetMatchState();  // MatchPickState 초기화
-    
-    resetMatchResultState(); // MatchResultState 초기화
-  }, [resetMatchState,  resetMatchResultState]);
+    resetMatchState();
+    resetMatchResultState();
+  }, [resetMatchState, resetMatchResultState]);
   const handleStart = (e) => {
     if (MatchState.point > userPoint.point) {
       alert("포인트가 부족합니다!!");
@@ -118,10 +116,10 @@ function Matching() {
 
     // 필수 선택 확인
     const isAgeSelected = MatchState.isUseOption[0]
-      ? MatchState.formData.age_option !== ""
+      ? MatchState.formData.ageOption !== ""
       : true;
     const isContactFrequencySelected = MatchState.isUseOption[1]
-      ? MatchState.formData.contact_frequency_option !== ""
+      ? MatchState.formData.contactFrequencyOption !== ""
       : true;
     const isHobbySelected = MatchState.isUseOption[2]
       ? MatchState.formData.hobbyOption.length > 0
@@ -143,7 +141,7 @@ function Matching() {
 
     const FormData = {
       ageOption: MatchState.isUseOption[0]
-        ? MatchState.formData.age_option
+        ? MatchState.formData.ageOption
         : "UNSELECTED",
       mbtiOption: MatchState.selectedMBTI
         .filter((letter) => letter !== "X")
@@ -152,13 +150,14 @@ function Matching() {
         ? MatchState.formData.hobbyOption
         : ["UNSELECTED"],
       contactFrequencyOption: MatchState.isUseOption[1]
-        ? MatchState.formData.contact_frequency_option
+        ? MatchState.formData.contactFrequencyOption
         : "UNSELECTED",
       sameMajorOption: MatchState.isUseOption[3] ? true : false,
     };
     setMatchState((prev) => ({
       ...prev,
       formData: {
+        ...prev.formData,
         FormData,
       },
     }));
@@ -328,24 +327,24 @@ function Matching() {
             {MatchState.isUseOption[0] && (
               <div className="match-select-button">
                 <AgeButton
-                  formData={MatchState.formData.age_option}
+                  formData={MatchState.formData.ageOption}
                   value="YOUNGER"
                   text="연하"
-                  onClick={() => handleAgeSelection("YOUNGER", "age_option")}
+                  onClick={() => handleAgeSelection("YOUNGER", "ageOption")}
                   isClickable={MatchState.isUseOption[0]}
                 />
                 <AgeButton
-                  formData={MatchState.formData.age_option}
+                  formData={MatchState.formData.ageOption}
                   value="EQUAL"
                   text="동갑"
-                  onClick={() => handleAgeSelection("EQUAL", "age_option")}
+                  onClick={() => handleAgeSelection("EQUAL", "ageOption")}
                   isClickable={MatchState.isUseOption[0]}
                 />
                 <AgeButton
-                  formData={MatchState.formData.age_option}
+                  formData={MatchState.formData.ageOption}
                   text="연상"
                   value="OLDER"
-                  onClick={() => handleAgeSelection("OLDER", "age_option")}
+                  onClick={() => handleAgeSelection("OLDER", "ageOption")}
                   isClickable={MatchState.isUseOption[0]}
                 />
               </div>
@@ -371,7 +370,7 @@ function Matching() {
                   money={100}
                   handleButtonClick={(e) => {
                     e.stopPropagation(); // 이벤트 전파 중지
-                    handleButtonClick(0, -100);
+                    handleButtonClick(1, 100);
                   }}
                 />
               </div>
@@ -379,31 +378,31 @@ function Matching() {
             {MatchState.isUseOption[1] && (
               <div className="match-select-button">
                 <AgeButton
-                  formData={MatchState.formData.contact_frequency_option}
+                  formData={MatchState.formData.contactFrequencyOption}
                   text="자주"
                   value="FREQUENT"
                   onClick={() =>
-                    handleAgeSelection("FREQUENT", "contact_frequency_option")
+                    handleAgeSelection("FREQUENT", "contactFrequencyOption")
                   }
                   isClickable={MatchState.isUseOption[1]}
                 />
                 <AgeButton
-                  formData={MatchState.formData.contact_frequency_option}
+                  formData={MatchState.formData.contactFrequencyOption}
                   text="보통"
                   value="NORMAL"
                   onClick={() =>
-                    handleAgeSelection("NORMAL", "contact_frequency_option")
+                    handleAgeSelection("NORMAL", "contactFrequencyOption")
                   }
                   isClickable={MatchState.isUseOption[1]}
                 />
                 <AgeButton
-                  formData={MatchState.formData.contact_frequency_option}
+                  formData={MatchState.formData.contactFrequencyOption}
                   text="가끔"
                   value="NOT_FREQUENT"
                   onClick={() =>
                     handleAgeSelection(
                       "NOT_FREQUENT",
-                      "contact_frequency_option"
+                      "contactFrequencyOption"
                     )
                   }
                   isClickable={MatchState.isUseOption[1]}

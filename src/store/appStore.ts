@@ -12,11 +12,13 @@ export type ChargeState = {
 
 export type UserState = {
   username: string;
+  university: string;
   major: string;
   age: string | number;
-  admissionYear: number | string | null;
+  admissionYear: number | string;
   song: string;
   mbti: string;
+  gender: string;
   point: number;
   pickMe: number;
   contact_id: string;
@@ -24,6 +26,7 @@ export type UserState = {
   hobby: unknown[];
   comment: string;
   numParticipants: number;
+  contactFrequency: string;
   contact_frequency: string;
   contact: string;
   [key: string]: unknown;
@@ -44,11 +47,9 @@ export type MatchPickState = {
   isUseOption: boolean[];
   formData: {
     ageOption?: string;
-    age_option?: string;
     mbtiOption?: string;
     hobbyOption?: unknown[];
     contactFrequencyOption?: string;
-    contact_frequency_option?: string;
     sameMajorOption?: boolean;
     match_code?: string;
     FormData?: unknown;
@@ -97,11 +98,13 @@ const createChargeState = (): ChargeState => ({
 
 const createUserState = (): UserState => ({
   username: "",
+  university: "",
   major: "",
   age: "",
-  admissionYear: null,
+  admissionYear: "",
   song: "",
   mbti: "",
+  gender: "",
   point: 0,
   pickMe: 0,
   contact_id: "",
@@ -109,6 +112,7 @@ const createUserState = (): UserState => ({
   hobby: [],
   comment: "",
   numParticipants: 0,
+  contactFrequency: "",
   contact_frequency: "",
   contact: "kakao",
 });
@@ -128,11 +132,9 @@ const createMatchPickState = (): MatchPickState => ({
   isUseOption: [false, false, false, false],
   formData: {
     ageOption: "",
-    age_option: "",
     mbtiOption: "",
     hobbyOption: [],
     contactFrequencyOption: "",
-    contact_frequency_option: "",
     sameMajorOption: false,
   },
 });
