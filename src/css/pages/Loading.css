@@ -52,7 +52,7 @@
     #FFF0F7 100%
   );
   background-size: 200% 100%;
-  animation: slideGradient 1.25s linear infinite reverse;
+  animation: slideGradient 3s linear infinite;
   width: 100%;
   height: 15px;
   border-radius: 4px;

@@ -9,7 +9,7 @@ import instance from "../axiosConfig"; // axios 인스턴스 불러오기
 import { useCurrentPoint } from "../hooks/useCurrentPoint";
 function Heart() {
   const navigate = useNavigate();
-  const [userPoint, setUserPoint] = useCurrentPoint();
+  const [currentPoint, setUserPoint] = useCurrentPoint();
   const [heartCount, setHeartCount] = useState(0); // 하트 갯수 상태 관리
   const [showModal, setShowModal] = useState(false); // 모달 상태 관리
   const calculateTotalAmount = (count) => {
@@ -24,14 +24,14 @@ function Heart() {
   };
 
   const totalAmount = calculateTotalAmount(heartCount); // 총 금액 계산
-  const remainingPoint = userPoint.point - totalAmount; // 잔여 포인트 계산
+  const remainingPoint = currentPoint - totalAmount; // 잔여 포인트 계산
   const handleIncreaseHeart = () => {
     // 하트가 증가했을 때의 새로운 하트 개수와 새로운 총 금액을 계산
     const newHeartCount = heartCount + 1;
     const newTotalAmount = calculateTotalAmount(newHeartCount);
   
     // 사용자의 포인트가 새로운 총 금액 이상인 경우에만 하트 추가 가능
-    if (userPoint.point >= newTotalAmount) {
+    if (currentPoint >= newTotalAmount) {
       setHeartCount(newHeartCount); // 하트 갯수 증가
     } else {
       alert("잔여 포인트가 부족합니다.");
@@ -44,7 +44,7 @@ function Heart() {
     }
   };
   const handleHeartExchange = async () => {
-    if (userPoint.point >= totalAmount) {
+    if (currentPoint >= totalAmount) {
       try {
         const response = await instance.post(
           "/auth/user/api/pickme",
@@ -79,7 +79,7 @@ function Heart() {
   };
   return (
     <div className="container">
-      <HeaderBackPoint currentPoint={userPoint.point} />
+      <HeaderBackPoint currentPoint={currentPoint} />
       <Background />
       
       <div className="charge-request-clicked">

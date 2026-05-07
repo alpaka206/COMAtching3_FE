@@ -4,8 +4,6 @@ import AdminRequestListContainer from "./AdminRequestListContainer";
 
 import * as styles from "../css/components/AdminRequestList.css";
 import { useAdminRequestsState } from "../store/appStore";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "./Adminnavbar";
 import { ROUTES } from "../routes";
@@ -16,31 +14,62 @@ function AdminRequestList() {
   const navigate = useNavigate();
   const [requests, setRequests] = useAdminRequestsState();
   const stompClientRef = useRef<any>(null);
+  const socketRef = useRef<any>(null);
+
   useEffect(() => {
-    console.log("requests: ", requests);
-  }, [requests]);
-  useEffect(() => {
+    let isMounted = true;
+
+    const disconnectWebSocket = () => {
+      const client = stompClientRef.current;
+      const socket = socketRef.current;
+
+      if (client?.connected) {
+        client.disconnect();
+      } else {
+        socket?.close?.();
+      }
+
+      stompClientRef.current = null;
+      socketRef.current = null;
+    };
+
     const connectWebSocket = async () => {
-      const socket = new SockJS(`${API_BASE_URL}/wss`);
-      
-      const client = Stomp.over(socket);
       const authorization = getAuthorizationHeader();
+
       if (!authorization) {
-        navigate(ROUTES.adminLogin);
+        if (isMounted) {
+          navigate(ROUTES.adminLogin);
+        }
         return;
       }
+
+      const [{ default: SockJS }, stompModule] = await Promise.all([
+        import("sockjs-client"),
+        import("stompjs"),
+      ]);
+
+      if (!isMounted) return;
+
+      const Stomp = stompModule.default ?? stompModule;
+      const socket = new SockJS(`${API_BASE_URL}/wss`);
+      const client = Stomp.over(socket);
+
+      socketRef.current = socket;
+      stompClientRef.current = client;
       client.debug = null;
       client.connect(
         { Authorization: authorization },
-        (frame) => {
-          console.log("Connected: " + frame);
-
-          stompClientRef.current = client;
+        () => {
+          if (!isMounted) {
+            disconnectWebSocket();
+            return;
+          }
 
           // 충전 요청 구독
           client.subscribe("/topic/chargeRequests", (message) => {
+            if (!isMounted) return;
+
             const chargeRequests = JSON.parse(message.body);
-            console.log(chargeRequests);
             // updateRequestsWithoutDuplicates(chargeRequests);
             setRequests((prevRequests) => {
               return [
@@ -55,8 +84,9 @@ function AdminRequestList() {
 
           // 승인 업데이트 구독
           client.subscribe("/topic/approvalUpdate", (message) => {
+            if (!isMounted) return;
+
             const userId = message.body;
-            console.log("userId:", userId);
             setRequests((prevRequests) => {
               return [
                 ...prevRequests.filter((request) => request.userId !== userId),
@@ -64,8 +94,9 @@ function AdminRequestList() {
             });
           });
           client.subscribe("/topic/cancelUpdate", (message) => {
+            if (!isMounted) return;
+
             const userId = message.body;
-            console.log("userId:", userId);
             setRequests((prevRequests) => {
               return [
                 ...prevRequests.filter((request) => request.userId !== userId),
@@ -74,7 +105,9 @@ function AdminRequestList() {
           });
         },
         (error) => {
-          console.error("Error connecting to WebSocket", error);
+          if (isMounted) {
+            console.error("Error connecting to WebSocket", error);
+          }
         }
       );
     };
@@ -90,12 +123,8 @@ function AdminRequestList() {
     initializeWebSocket();
 
     return () => {
-      const client = stompClientRef.current;
-      if (client && client.connected) {
-        client.disconnect(() => {
-          console.log("Disconnected");
-        });
-      }
+      isMounted = false;
+      disconnectWebSocket();
     };
   }, [navigate, setRequests]); // 빈 의존성 배열로 한 번만 실행
   function handleAction(userId, amount, actionType) {
