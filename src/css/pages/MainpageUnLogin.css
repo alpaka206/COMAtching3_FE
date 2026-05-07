@@ -102,6 +102,7 @@
 
 .kakao-login {
   margin-top: 48px;
+  border: 0;
   border-radius: 15px;
   height: 48px;
   width: 90%;
@@ -150,6 +151,9 @@
 }
 
 .privacy-button {
+  appearance: none;
+  background: none;
+  border: 0;
   font-family: "Pretendard", sans-serif;
   font-size: 14px;
   font-weight: bold;

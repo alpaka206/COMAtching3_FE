@@ -69,7 +69,7 @@ function Matchresult() {
   const resultData = useMemo(() => {
     const hobby = MatchResult.hobby.map((hobbyName) => {
       const matchedIcon = hobbyIcons.find((icon) => icon.label === hobbyName);
-      return { name: hobbyName, image: matchedIcon?.image || "" };
+      return { name: hobbyName, image: matchedIcon?.image ?? null };
     });
 
     return {
@@ -157,11 +157,13 @@ function Matchresult() {
                       <div className="MatchResult-Text-Hobby">
                         {resultData.hobby.map((hobby, index) => (
                           <div key={index} className="hobby-box">
-                            <img
-                              src={hobby.image}
-                              alt={hobby.name}
-                              className="hobby-icon"
-                            />
+                            {hobby.image ? (
+                              <img
+                                src={hobby.image}
+                                alt={hobby.name}
+                                className="hobby-icon"
+                              />
+                            ) : null}
                             <span className="hobby-text">{hobby.name}</span>
                           </div>
                         ))}

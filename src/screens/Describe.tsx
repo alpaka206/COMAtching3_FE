@@ -8,9 +8,7 @@ function Describe() {
         <Background />
         <HeaderNav />
         <div className="description-content">
-            <div className="icon">
-            <img src="" alt="" />
-            </div>
+            <div className="icon" aria-hidden="true" />
             <div className="computer-message">
             반가워요! 저는 Comatching AI 입니다. 커플매칭을 진행하기 전에, 먼저 당신에 대해 알아야 해요.
             </div>

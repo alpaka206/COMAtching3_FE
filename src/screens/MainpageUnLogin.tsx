@@ -35,8 +35,8 @@ function MainpageUnLogin() {
         if (response.status === 200) {
           setNumParticipants(response.data.data);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      } catch {
+        setNumParticipants(null);
       }
     };
     fetchData();
@@ -63,7 +63,7 @@ function MainpageUnLogin() {
         <div className="bubble" >
           ⚡️10초만에 빠른 가입⚡️
         </div>
-        <button className="kakao-login" onClick={handleLogin}>
+        <button className="kakao-login" type="button" onClick={handleLogin}>
             <div className="kakao-login-element">
               <img
                 src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/kakao.svg`}
@@ -75,9 +75,9 @@ function MainpageUnLogin() {
       </div>
       <div className="help-text">이용에 도움이 필요하신가요?</div>
         <div>
-          <a className="privacy-button" onClick={handleVisitGuide}>
+          <button className="privacy-button" type="button" onClick={handleVisitGuide}>
             서비스 이용법 안내
-          </a>
+          </button>
         </div>  
         <Footer /> 
         

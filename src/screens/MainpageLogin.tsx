@@ -294,9 +294,9 @@ function MainpageLogin({ onLogout }) {
         {/* <div  style={{ height: '50px' }}></div> */}
       </div>
       <div className="logout-container">
-        <a href="#" onClick={handleLogout} className="logout-link">
+        <button type="button" onClick={handleLogout} className="logout-link">
           로그아웃
-        </a>
+        </button>
       </div>
       <Footer/>
       {/* <NavBar/> */}
