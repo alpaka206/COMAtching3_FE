@@ -16,7 +16,7 @@ import MatchOptionButton from "../components/MatchOptionButton";
 import hobbyIcons from "../data/hobbyIcons"; // 취미 아이콘 데이터 가져오기
 import Loading from "./Loading";
 import HeaderBackPoint from "../components/HeaderBackPoint";
-import instance from "../axiosConfig";
+import instance, { isAuthRequiredError } from "../axiosConfig";
 function Matching() {
   const [MatchState, setMatchState] = useMatchPickState(); // 뽑은 선택 리스트
   const [userPoint, setUserPoint] = useUserState();
@@ -44,6 +44,7 @@ function Matching() {
           point: response.data.data.currentPoint, // Update the point in Recoil
         }));
       } catch (error) {
+        if (isAuthRequiredError(error)) return;
         console.error("Failed to fetch currentPoint:", error);
       }
     };

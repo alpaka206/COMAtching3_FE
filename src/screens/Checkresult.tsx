@@ -5,7 +5,7 @@ import HeaderBack from "../components/HeaderBack";
 import { useCheckResultState } from "../store/appStore";
 import ResultInfoRrev from "../components/ResultInfoRrev";
 import { useNavigate } from "react-router-dom";
-import instance from "../axiosConfig"; // 전역 axios 인스턴스 불러오기
+import instance, { isAuthRequiredError } from "../axiosConfig"; // 전역 axios 인스턴스 불러오기
 
 function Checkresult() {
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ function Checkresult() {
           navigate("/");
         }
       } catch (error) {
+        if (isAuthRequiredError(error)) return;
         console.error("Error fetching data:", error);
       }
     };

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect } from "react";
 import QRCode from "react-qr-code";
-import axios from "../axiosConfig";
+import axios, { isAuthRequiredError } from "../axiosConfig";
 import HeaderNav from "../components/HeaderNav";
 import { useNavigate } from "react-router-dom";
 // QR코드 만들기
@@ -18,6 +18,7 @@ const QRGenerator = () => {
           setHashCode(response.data.data.match_code);
         }
       } catch (error) {
+        if (isAuthRequiredError(error)) return;
         console.error("Error fetching data:", error);
       }
     };

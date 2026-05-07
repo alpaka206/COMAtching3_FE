@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useRef, useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import axios from "axios";
+import instance from "../axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { useMatchPickState } from "../store/appStore";
 import { ROUTES } from "../routes";
@@ -16,7 +16,7 @@ const CodeReader = () => {
   const sendHashCode = async (hashCode) => {
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;
-    const response = await axios.get(
+    const response = await instance.get(
       `/comatching/code-req/admin?code=${hashCode}`
     );
     if (response.data.status === 200) {

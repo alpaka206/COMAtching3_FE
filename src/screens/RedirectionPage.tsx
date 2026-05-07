@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DecodeJWT from "../components/DecodeJWT";
 import { ROUTES } from "../routes";
+import { setAuthTokens } from "../lib/authStorage";
 
 function Redirection() {
   const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅 사용
@@ -19,19 +20,16 @@ function Redirection() {
         // 역할 확인
         if (decoded.role === "ROLE_SOCIAL") {
           console.log("회원가입 유저");
-          localStorage.removeItem("token");
-          localStorage.setItem("token", token);
+          setAuthTokens({ accessToken: token, expiresHours: 1 });
           // 회원가입 페이지로 이동
           navigate(ROUTES.profileBuilder);
         } else if (decoded.role === "ROLE_USER") {
           console.log("로그인 유저");
-          localStorage.removeItem("token");
-          localStorage.setItem("token", token); // 토큰을 로컬 스토리지에 저장
+          setAuthTokens({ accessToken: token, expiresHours: 1 });
           navigate(ROUTES.home);
         } else if (decoded.role === "ROLE_ADMIN") {
           console.log("관리자");
-          localStorage.removeItem("token");
-          localStorage.setItem("token", token);
+          setAuthTokens({ accessToken: token, expiresHours: 4 });
           navigate(ROUTES.adminSelect); // 관리자 페이지로 이동
         } else {
           console.error("Unknown role:", decoded.role); // 알 수 없는 역할 처리

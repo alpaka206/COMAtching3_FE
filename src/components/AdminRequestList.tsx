@@ -9,23 +9,8 @@ import Stomp from "stompjs";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "./Adminnavbar";
 import { ROUTES } from "../routes";
-
-function getTokenFromCookie() {
-  
-  const name = "Authorization=";
-  const decodedCookie = decodeURIComponent(document.cookie);
-  const ca = decodedCookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) === 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
+import { getAuthorizationHeader } from "../lib/authStorage";
+import { API_BASE_URL } from "../axiosConfig";
 
 function AdminRequestList() {
   const navigate = useNavigate();
@@ -36,17 +21,17 @@ function AdminRequestList() {
   }, [requests]);
   useEffect(() => {
     const connectWebSocket = async () => {
-      const socket = new SockJS("https://cuk.comatching.site/wss");
+      const socket = new SockJS(`${API_BASE_URL}/wss`);
       
       const client = Stomp.over(socket);
-      const token = getTokenFromCookie();
-      if (!token) {
+      const authorization = getAuthorizationHeader();
+      if (!authorization) {
         navigate(ROUTES.adminLogin);
         return;
       }
       client.debug = null;
       client.connect(
-        { Authorization: `Bearer ${token}` },
+        { Authorization: authorization },
         (frame) => {
           console.log("Connected: " + frame);
 

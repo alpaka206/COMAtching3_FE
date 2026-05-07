@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import HeaderBackPoint from "../components/HeaderBackPoint";
 import { useUserState } from "../store/appStore";
 import AccountButtonInfo from "../components/AccountButtonInfo";
-import instance from "../axiosConfig"; // axios 인스턴스 불러오기
+import instance, { isAuthRequiredError } from "../axiosConfig"; // axios 인스턴스 불러오기
 import ChargeConfirmationModal from "../components/ChargeConfirmationModal";// Modal 컴포넌트 불러오기
 
 function Charge() {
@@ -75,6 +75,7 @@ function Charge() {
             point: response.data.data.currentPoint, // Update the point in Recoil
           }));
         } catch (error) {
+          if (isAuthRequiredError(error)) return;
           console.error("Failed to fetch currentPoint:", error);
         }
         // setUserPoint((prev) => ({

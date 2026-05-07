@@ -6,7 +6,7 @@ import { useUserState } from "../store/appStore";
 // 스타일링을 위한 CSS 파일 생성
 import HeaderBackPoint from "../components/HeaderBackPoint";
 import HartConfirmationModal from "../components/HartConfirmModal";
-import instance from "../axiosConfig"; // axios 인스턴스 불러오기
+import instance, { isAuthRequiredError } from "../axiosConfig"; // axios 인스턴스 불러오기
 function Heart() {
   const navigate = useNavigate();
   const [userPoint, setUserPoint] = useUserState();
@@ -37,6 +37,7 @@ function Heart() {
             point: response.data.data.currentPoint, // Update the point in Recoil
           }));
         } catch (error) {
+          if (isAuthRequiredError(error)) return;
           console.error("Failed to fetch currentPoint:", error);
         }
         // setUserPoint((prev) => ({
@@ -69,22 +70,10 @@ function Heart() {
   const handleHeartExchange = async () => {
     if (userPoint.point >= totalAmount) {
       try {
-        const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
-          const [name, value] = cookie.split("=");
-          acc[name] = value;
-          return acc;
-        }, {});
-        const accessToken = cookies.Authorization;
-
         const response = await instance.post(
-          "https://cuk.comatching.site/auth/user/api/pickme",
+          "/auth/user/api/pickme",
           {
             amount: heartCount,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
           }
         );
 

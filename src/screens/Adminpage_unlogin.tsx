@@ -1,8 +1,9 @@
 // @ts-nocheck
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { publicInstance } from "../axiosConfig";
+import { setAuthTokens } from "../lib/authStorage";
+import { ROUTES } from "../routes";
 
 function Adminpageunlogin() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -24,8 +25,8 @@ function Adminpageunlogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "https://cuk.comatching.site/admin/login",
+      const response = await publicInstance.post(
+        "/admin/login",
         formData,
         {
           headers: {
@@ -41,10 +42,9 @@ function Adminpageunlogin() {
         const token = response.headers["authorization"];
 
         if (token && token.startsWith("Bearer ")) {
-          const tokenWithoutBearer = token.slice(7);
-          Cookies.set("Authorization", tokenWithoutBearer,{ path: "/", expires: 1/6 });
+          setAuthTokens({ accessToken: token, expiresHours: 4 });
         }
-        navigate("/adminpage/charge-requests"); // 로그인 성공 시 페이지 이동
+        navigate(ROUTES.adminChargeRequests); // 로그인 성공 시 페이지 이동
       } else {
         console.log("로그인 실패:", response.data.message); // 로그인 실패 시 메시지 로깅
         alert("로그인 실패: " + response.data.message); // 사용자에게 실패 메시지를 보여줍니다.

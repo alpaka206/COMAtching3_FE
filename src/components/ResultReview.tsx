@@ -1,8 +1,10 @@
 // @ts-nocheck
 import { useState } from "react";
 import Rating from "@mui/material/Rating";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import instance, { isAuthRequiredError } from "../axiosConfig";
+import { clearAuthTokens } from "../lib/authStorage";
+import { ROUTES } from "../routes";
 
 // 스타 스타일 설정
 const blackStarStyles = {
@@ -20,24 +22,15 @@ function ResultReview({ user, setIsReview }) {
       grade: score,
     };
 
-    const token = localStorage.getItem("token");
     try {
-      const response = await axios.post(
-        "https://catholic-mibal.site/user/comatch/feedback",
-        FormData,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const response = await instance.post("/user/comatch/feedback", FormData);
 
       if (
         response.data.code === "SEC-001" ||
         response.data.code === "SEC-002"
       ) {
-        localStorage.removeItem("token");
-        navigate("/");
+        clearAuthTokens();
+        navigate(ROUTES.home);
       } else if (response.data.status === 200) {
         // 리뷰 제출 후 상태 업데이트
         // 리뷰 제출할때마다 다시 받아오는것은 불필요하다고 생각해서 리뷰하기만 사라지도록 했습니다.
@@ -50,6 +43,7 @@ function ResultReview({ user, setIsReview }) {
         );
       }
     } catch (error) {
+      if (isAuthRequiredError(error)) return;
       console.error(error);
     }
   };
