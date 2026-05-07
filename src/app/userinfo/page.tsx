@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const Userinfo = dynamic(() => import('@/legacy-pages/User_info_page'), {
+const Userinfo = dynamic(() => import('@/screens/User_info_page'), {
   ssr: false,
 })
 

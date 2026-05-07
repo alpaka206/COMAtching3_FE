@@ -7,7 +7,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist', '.next', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', '.next', '.eslintrc.cjs', '**/*.d.ts'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   overrides: [
     {
@@ -21,16 +21,11 @@ module.exports = {
     },
   ],
   settings: { react: { version: 'detect' } },
-  plugins: ['react-refresh'],
   rules: {
     'react/jsx-no-target-blank': 'off',
     'react/prop-types': 'off',
     'no-unused-vars': 'warn',
     'no-undef': 'warn',
     'no-extra-boolean-cast': 'warn',
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
   },
 }

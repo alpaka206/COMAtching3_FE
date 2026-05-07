@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const Matchresult = dynamic(() => import('@/legacy-pages/Matchresult'), {
+const Matchresult = dynamic(() => import('@/screens/Matchresult'), {
   ssr: false,
 })
 

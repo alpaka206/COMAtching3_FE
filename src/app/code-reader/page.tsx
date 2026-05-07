@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const CodeReader = dynamic(() => import('@/legacy-pages/CodeReader'), {
+const CodeReader = dynamic(() => import('@/screens/CodeReader'), {
   ssr: false,
 })
 

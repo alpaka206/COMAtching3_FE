@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 
 const Adminpageunlogin = dynamic(
-  () => import('@/legacy-pages/Adminpage_unlogin'),
+  () => import('@/screens/Adminpage_unlogin'),
   { ssr: false },
 )
 

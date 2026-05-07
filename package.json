@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
-    "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "start": "next start"
   },
   "dependencies": {
@@ -41,7 +41,6 @@
     "eslint-config-next": "^16.2.5",
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.7",
     "typescript": "^6.0.3"
   }
 }
