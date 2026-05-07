@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import type { AnchorHTMLAttributes, ReactNode } from 'react'
 import NextLink from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -19,7 +19,7 @@ type LinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
 export function useNavigate() {
   const router = useRouter()
 
-  return (to: string | number, options?: NavigateOptions) => {
+  return useCallback((to: string | number, options?: NavigateOptions) => {
     if (typeof to === 'number') {
       window.history.go(to)
       return
@@ -31,7 +31,7 @@ export function useNavigate() {
     }
 
     router.push(to)
-  }
+  }, [router])
 }
 
 export function useLocation() {
