@@ -8,6 +8,7 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "./Adminnavbar";
+import { ROUTES } from "../routes";
 
 function getTokenFromCookie() {
   
@@ -40,7 +41,7 @@ function AdminRequestList() {
       const client = Stomp.over(socket);
       const token = getTokenFromCookie();
       if (!token) {
-        navigate("/adminlogin");
+        navigate(ROUTES.adminLogin);
         return;
       }
       client.debug = null;

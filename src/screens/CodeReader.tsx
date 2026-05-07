@@ -4,6 +4,7 @@ import { Scanner } from "@yudiel/react-qr-scanner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useMatchPickState } from "../store/appStore";
+import { ROUTES } from "../routes";
 // QR 코드 인식을 위한 페이지 입니다.
 const CodeReader = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const CodeReader = () => {
           match_code: hashCode,
         },
       }));
-      navigate("/match");
+      navigate(ROUTES.matching);
     } else {
       isSubmittingRef.current = false;
       throw new Error("Unexpected response code or status");

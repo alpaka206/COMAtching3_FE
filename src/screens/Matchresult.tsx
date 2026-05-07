@@ -13,6 +13,7 @@ import hobbyIcons from "../data/hobbyIcons";
 import Loading from "./Loading";
 
 import instance from "../axiosConfig"; // axios 인스턴스 불러오기
+import { ROUTES } from "../routes";
 
 function Matchresult() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function Matchresult() {
   const handleSubmit = async () => {
     if (MatchState.point > resultPoint.point) {
       alert("포인트가 부족합니다!!");
-      navigate("/charge-request", { replace: true });
+      navigate(ROUTES.charge, { replace: true });
       return;
     }
 
@@ -90,17 +91,17 @@ function Matchresult() {
       resultData.socialId === "" &&
       resultData.song === ""
     ) {
-      navigate("/", { replace: true });
+      navigate(ROUTES.home, { replace: true });
     }
   }, [resultData, navigate]);
   
   // 다시뽑기 버튼 핸들러
   const handleRematch = () => {
-    navigate("/matching");
+    navigate(ROUTES.matching);
   };
 
   const handleHome = () => {
-    navigate("/");
+    navigate(ROUTES.home);
   };
   console.log(resultData);
   return (
