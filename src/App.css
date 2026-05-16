@@ -62,3 +62,9 @@
   position: relative;
   backdrop-filter: blur(12px);
 }
+
+.guide-image {
+  width: 90%;
+  height: auto;
+  padding-top: 30px;
+}

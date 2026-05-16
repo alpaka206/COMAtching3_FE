@@ -10,8 +10,10 @@ function MyInfoButton({ imgSrc, infoText, buttonText ,handleCharge}) {
       </div>
       <img
         className={styles.my_button_img}
-        src={import.meta.env.VITE_PUBLIC_URL + imgSrc}
+        src={imgSrc}
         alt="이미지"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   );

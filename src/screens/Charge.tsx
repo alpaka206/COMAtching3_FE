@@ -75,10 +75,8 @@ function Charge() {
       ) : (
         <div className="charge-request-unclicked">
           💸입금 계좌 확인하기
-          <button className="charge-request-unclicked-img" onClick={handleAccountToggleClick}>
-            <img src={`${
-                import.meta.env.VITE_PUBLIC_URL
-              }../../assets/arrowbottom.svg`} alt="충전요청 열기" />
+          <button className="charge-request-unclicked-img" type="button" onClick={handleAccountToggleClick}>
+            <img src="/assets/arrowbottom.svg" alt="충전요청 열기" />
           </button>
         </div>
       )}
@@ -96,7 +94,7 @@ function Charge() {
           />
           <span className="currency-circle">원</span>
         </div>
-        <button className="charge-button" onClick={handleSubmit} disabled={isButtonDisabled}>
+        <button className="charge-button" type="button" onClick={handleSubmit} disabled={isButtonDisabled}>
           충전 요청
         </button>
         <hr className="gray-divider" />

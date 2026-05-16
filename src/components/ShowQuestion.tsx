@@ -30,7 +30,6 @@ function ShowQuestion({
                 questions[QuestionNum],
                 1000,
                 () => setShowAnswerBox(true),
-                () => console.log("test"),
               ]}
               speed={85}
               className="typing-animation"

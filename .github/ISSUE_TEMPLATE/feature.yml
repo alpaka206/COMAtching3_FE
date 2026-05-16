@@ -7,6 +7,7 @@ body:
     attributes:
       value: |
         제목 예시: `feat: 매칭 결과 화면 구현`
+        브랜치 예시: `feat/matching-result`
   - type: textarea
     id: goal
     attributes:
@@ -40,5 +41,13 @@ body:
       label: 검증
       description: 수동 확인 또는 테스트 계획 작성
       placeholder: npm run build, 주요 화면 수동 확인
+    validations:
+      required: false
+  - type: textarea
+    id: security_quality
+    attributes:
+      label: 보안/품질 기준
+      description: XSS, CSRF, 토큰, 성능, lazy loading, 이미지 최적화 고려 사항 정리
+      placeholder: 입력값 렌더링 방식, 인증 필요 여부, 이미지/동적 로딩 계획 정리
     validations:
       required: false

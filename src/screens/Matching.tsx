@@ -18,6 +18,9 @@ import HeaderBackPoint from "../components/HeaderBackPoint";
 import instance from "../axiosConfig";
 import { createMatchRequestPayload } from "../features/matching/createMatchRequestPayload";
 import { useCurrentPoint } from "../hooks/useCurrentPoint";
+
+const SWIPE_COMPLETE_POSITION = 252;
+
 function Matching() {
   const [MatchState, setMatchState] = useMatchPickState();
   const [currentPoint, setUserPoint] = useCurrentPoint();
@@ -100,14 +103,13 @@ function Matching() {
   };
 
   const handleMove = (e) => {
-    if (MatchState.point > currentPoint) {
-      alert("포인트가 부족합니다!!");
-      return; // 동작 중단
-    }
     if (isDragging) {
       const clientX = e.type === "mousemove" ? e.clientX : e.touches[0].clientX;
       const deltaX = clientX - startX.current;
-      const newPosition = Math.min(Math.max(0, imagePositionRef.current + deltaX), 252); // 252는 이동 가능한 최대 위치
+      const newPosition = Math.min(
+        Math.max(0, imagePositionRef.current + deltaX),
+        SWIPE_COMPLETE_POSITION
+      );
       updateImagePosition(newPosition);
       startX.current = clientX; // 현재 위치 업데이트
     }
@@ -116,6 +118,7 @@ function Matching() {
     if (!isDragging) return;
     if (MatchState.point > currentPoint) {
       alert("포인트가 부족합니다!!");
+      resetImagePosition();
       return; // 동작 중단
     }
     setIsDragging(false);
@@ -134,15 +137,20 @@ function Matching() {
     if (!isAgeSelected) {
       alert("나이를 선택해 주세요.");
       resetImagePosition(); // 이미지 위치 초기화
+      return;
     } else if (!isContactFrequencySelected) {
       alert("연락 빈도를 선택해 주세요.");
       resetImagePosition(); // 이미지 위치 초기화
+      return;
     } else if (!isHobbySelected) {
-      alert("취미를 선택해 주세요.(최대 5개");
+      alert("취미를 선택해 주세요.(최대 5개)");
       resetImagePosition(); // 이미지 위치 초기화
-    } else if (imagePositionRef.current >= 252) {
-      alert("다음 단계로 이동합니다."); // 이동 완료 후 원하는 동작 수행
-      // 다음 단계로 이동 로직 추가
+      return;
+    }
+
+    if (imagePositionRef.current < SWIPE_COMPLETE_POSITION) {
+      resetImagePosition();
+      return;
     }
 
     const FormData = createMatchRequestPayload(MatchState);
@@ -188,6 +196,10 @@ function Matching() {
       }
     } catch (error) {
       console.error("오류 발생:", error);
+      alert("매칭 요청 중 오류가 발생했습니다.");
+      resetImagePosition();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -447,7 +459,12 @@ function Matching() {
                     onClick={() => handleHobbyClick(hobby.label)}
                     disabled={!MatchState.isUseOption[2]}
                   >
-                    <img src={hobby.image} alt={hobby.alt} />
+                    <img
+                      src={hobby.image}
+                      alt={hobby.alt}
+                      loading="lazy"
+                      decoding="async"
+                    />
                     <div>{hobby.label}</div>
                   </button>
                 ))}

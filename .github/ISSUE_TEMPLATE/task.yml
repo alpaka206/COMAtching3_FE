@@ -7,6 +7,7 @@ body:
     attributes:
       value: |
         제목 예시: `chore: GitHub 협업 설정 정리`
+        브랜치 예시: `chore/github-settings`
   - type: textarea
     id: scope
     attributes:
@@ -30,5 +31,26 @@ body:
     attributes:
       label: 검증
       placeholder: GitHub 템플릿 표시 확인, npm run build
+    validations:
+      required: false
+  - type: dropdown
+    id: category
+    attributes:
+      label: 작업 분류
+      options:
+        - 문서 정리
+        - 설정 변경
+        - CI 보완
+        - 보안 점검
+        - 성능 점검
+        - 리팩터링
+    validations:
+      required: true
+  - type: textarea
+    id: risk
+    attributes:
+      label: 영향 범위
+      description: 사용자 플로우, BE 계약, 배포 설정 영향 정리
+      placeholder: 사용자 플로우 영향 없음, BE 계약 변경 없음
     validations:
       required: false

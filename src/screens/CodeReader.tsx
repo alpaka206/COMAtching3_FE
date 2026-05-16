@@ -9,6 +9,8 @@ import { ROUTES } from "../routes";
 const CodeReader = () => {
   const navigate = useNavigate();
   const [data, setData] = useState(""); // QR 코드에서 읽은 데이터 상태 관리
+  const [scannerError, setScannerError] = useState("");
+  const [isScannerActive, setIsScannerActive] = useState(false);
   const [, setCodeState] = useMatchPickState();
   const isSubmittingRef = useRef(false);
 
@@ -37,35 +39,50 @@ const CodeReader = () => {
   };
 
   // 데이터에서 hashCode를 추출하는 함수(페이지로 이동해서 하는 경우든 변경해도 괜찮을듯)
-  const extractHashCode = (data) => {
-    const match = data.match(/https:\/\/cuk-comatching\.web\.app\/(\w+)/);
-    if (match && match.length > 1) {
-      return match[1];
+  const extractHashCode = (rawValue) => {
+    try {
+      const url = new URL(rawValue);
+      const code = url.pathname.split("/").filter(Boolean).at(-1);
+
+      return code && /^[a-zA-Z0-9_-]+$/.test(code) ? code : null;
+    } catch {
+      return /^[a-zA-Z0-9_-]+$/.test(rawValue) ? rawValue : null;
     }
-    return null;
   };
+
   return (
     <div className="container">
       <div className="content">
         {/* 카메라로 QR 코드를 읽는 컴포넌트 */}
-        <Scanner
-          constraints={{ facingMode: "environment" }}
-          onScan={(detectedCodes) => {
-            const rawValue = detectedCodes[0]?.rawValue;
-            if (rawValue) {
-              setData(rawValue);
-              const hashCode = extractHashCode(rawValue);
-              if (hashCode) sendHashCode(hashCode);
-            }
-          }}
-          onError={(error) => {
-            console.info(error);
-          }}
-          styles={{
-            container: { width: "100%", height: "100%" },
-            video: { width: "100%", height: "100%" },
-          }}
-        />
+        {isScannerActive ? (
+          <Scanner
+            constraints={{ facingMode: "environment" }}
+            onScan={(detectedCodes) => {
+              const rawValue = detectedCodes[0]?.rawValue;
+              if (rawValue) {
+                setData(rawValue);
+                const hashCode = extractHashCode(rawValue);
+                if (hashCode) sendHashCode(hashCode);
+              }
+            }}
+            onError={(error) => {
+              setScannerError(error?.message ?? "카메라를 사용할 수 없습니다.");
+            }}
+            styles={{
+              container: { width: "100%", height: "100%" },
+              video: { width: "100%", height: "100%" },
+            }}
+          />
+        ) : (
+          <button
+            type="button"
+            className="submit-button"
+            onClick={() => setIsScannerActive(true)}
+          >
+            카메라 시작
+          </button>
+        )}
+        {scannerError && <p role="status">{scannerError}</p>}
         {/* 읽은 데이터 표시(서비스시 qr이 제대로 오는지, 인식을 했는지, 인터넷이 안되는건지 확인하기 위함) */}
         <p>{data}</p>
       </div>

@@ -25,28 +25,21 @@ function Adminpageunlogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await publicInstance.post(
-        "/admin/login",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response);
+      const response = await publicInstance.post("/admin/login", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       // 로그인 응답 데이터에서 status 코드를 확인
       if (response.data.status === 200) {
-        console.log("로그인 성공");
         const token = response.headers["authorization"];
 
         if (token && token.startsWith("Bearer ")) {
           setAuthTokens({ accessToken: token, expiresHours: 4 });
         }
-        navigate(ROUTES.adminChargeRequests); // 로그인 성공 시 페이지 이동
+        navigate(ROUTES.adminChargeRequests, { replace: true }); // 로그인 성공 시 페이지 이동
       } else {
-        console.log("로그인 실패:", response.data.message); // 로그인 실패 시 메시지 로깅
         alert("로그인 실패: " + response.data.message); // 사용자에게 실패 메시지를 보여줍니다.
       }
     } catch (error) {
@@ -60,7 +53,14 @@ function Adminpageunlogin() {
   return (
     <div className="login-container">
       <div className="login-box">
-        <img src="/assets/admin_page_logo.svg" alt="Logo" className="logo" />
+        <img
+          src="/assets/admin_page_logo.webp"
+          alt="Logo"
+          className="logo"
+          width="140"
+          height="40"
+          decoding="async"
+        />
         <h2 className="partners-page">Partners Page</h2>
         <form onSubmit={handleSubmit}>
           <input

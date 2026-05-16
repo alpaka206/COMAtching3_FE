@@ -22,13 +22,16 @@ function Mainpage() {
       window.history.replaceState(null, "", window.location.pathname);
 
       if (userRole === "SOCIAL") {
-        navigate(ROUTES.hobby);
+        navigate(ROUTES.hobby, { replace: true });
+        return;
       }
 
       if (userRole === "USER") {
-        navigate(ROUTES.home);
+        navigate(ROUTES.home, { replace: true });
+        return;
       }
 
+      navigate(ROUTES.home, { replace: true });
       return;
     }
 

@@ -39,7 +39,7 @@ function MatchHeader({ MatchState, setMatchState, setMatchPageResult }) {
       <div>
         <img
           className={styles.logoImg}
-          src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/logowhite.png`}
+          src="/assets/logowhite.webp"
           alt="로고"
           onClick={handleMatchLogo}
         />
@@ -47,7 +47,7 @@ function MatchHeader({ MatchState, setMatchState, setMatchPageResult }) {
       <div className="match-point-remaining">
         잔여포인트
         <img
-          src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/point.svg`}
+          src="/assets/point.svg"
           alt="cost"
         />
         {MatchState.balance}

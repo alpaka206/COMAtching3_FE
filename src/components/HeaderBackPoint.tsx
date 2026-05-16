@@ -9,14 +9,14 @@ function HeaderBackPoint({ currentPoint }) {
   return (
     <div className={styles.header}>
        <button className={styles.left} type="button" onClick={() => navigate(ROUTES.home)}>
-                <img src="./assets/backimg.svg" alt="point" className={styles.pointImage} />
+                <img src="/assets/backimg.svg" alt="" className={styles.pointImage} />
                 <span className={styles.spanText}>돌아가기</span>
                 
         </button>
         <button className={styles.right} type="button" onClick={() => navigate(ROUTES.charge)}>
-                <img src="./assets/point.svg" alt="point" className={styles.pointImage} />
+                <img src="/assets/point.svg" alt="point" className={styles.pointImage} />
                 <span className={styles.spanText}>{ currentPoint }p</span>
-                <img src="./assets/headertoggle.svg" alt="toggle" className={styles.toggleImage} />
+                <img src="/assets/headertoggle.svg" alt="toggle" className={styles.toggleImage} />
         </button>
     </div>
   );

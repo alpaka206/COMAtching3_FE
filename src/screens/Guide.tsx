@@ -1,8 +1,8 @@
 // @ts-nocheck
+import Image from "next/image";
 import HeaderBack from "../components/HeaderBack";
 import Footer from "../components/Footer";
 import Background from "../components/Background";
-// 단순한 가이드북 페이지인데 이것도 당시 시간 부족으로 그냥 큰 이미지 하나 넣었습니다. 수정필요해보입니다.
 
 function Guide() {
   return (
@@ -10,15 +10,14 @@ function Guide() {
       <Background/>
       <HeaderBack />
       <div className="content">
-        <img
-          // className="guide-img"
-          src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/guide.png`}
-          alt="가이드 이미지1"
-          style={{
-            width: "90%",
-            height: "auto",
-            paddingTop: "30px",
-          }}
+        <Image
+          src="/assets/guide.png"
+          alt="서비스 이용 가이드"
+          width={786}
+          height={3050}
+          sizes="(max-width: 480px) 72vw, 354px"
+          className="guide-image"
+          priority
         />
       </div>
       <Footer />

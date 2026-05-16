@@ -18,6 +18,7 @@ npm run dev
 ## 검증
 
 ```bash
+npm run policy:branch
 npm run lint
 npm run build
 ```
@@ -28,7 +29,7 @@ npm run build
 
 - `src/app`: Next.js App Router 라우트
 - `src/screens`: App Router 라우트에서 연결하는 클라이언트 화면
-- `src/app/providers.tsx`: RecoilRoot, 브라우저 외부 열기 처리
+- `src/app/providers.tsx`: 공통 클라이언트 Provider와 브라우저 외부 열기 처리
 - `src/lib/react-router-dom.tsx`: 기존 `react-router-dom` 사용처를 Next 라우터로 연결하는 호환 레이어
 
 브라우저 전용 화면은 `dynamic(..., { ssr: false })` 기준으로 연결.
@@ -46,4 +47,8 @@ npm run build
 - 커밋/PR/이슈 제목은 한국어 명사형 사용
 - 예시: `feat: 매칭 결과 화면 구현`
 - 예시: `fix: 로그인 리다이렉트 오류 수정`
+- `합니다`, `했습니다`, `됩니다` 같은 격식체 종결 사용 금지
 - 자세한 규칙은 [CONTRIBUTING.md](./CONTRIBUTING.md) 확인
+- 협업 운영 규칙은 [docs/collaboration.md](./docs/collaboration.md) 확인
+- 보안/품질 점검표는 [docs/security-quality-checklist.md](./docs/security-quality-checklist.md) 확인
+- 보안 신고 기준은 [SECURITY.md](./SECURITY.md) 확인

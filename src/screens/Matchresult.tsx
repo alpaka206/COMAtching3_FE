@@ -103,7 +103,7 @@ function Matchresult() {
   const handleHome = () => {
     navigate(ROUTES.home);
   };
-  console.log(resultData);
+
   return (
     <>
       {loading ? (
@@ -162,6 +162,8 @@ function Matchresult() {
                                 src={hobby.image}
                                 alt={hobby.name}
                                 className="hobby-icon"
+                                loading="lazy"
+                                decoding="async"
                               />
                             ) : null}
                             <span className="hobby-text">{hobby.name}</span>
@@ -193,12 +195,7 @@ function Matchresult() {
                 <div className="MatchResult-button-container">
                   <button className="Retry-same-button" onClick={handleSubmit}>
                     <div className="Retry-same-button-point">
-                      <img
-                        src={`${
-                          import.meta.env.VITE_PUBLIC_URL
-                        }../../assets/point.svg`}
-                        alt="cost"
-                      />
+                      <img src="/assets/point.svg" alt="cost" />
                       {MatchState.point}P
                     </div>
                     같은 조건으로 다시 뽑기

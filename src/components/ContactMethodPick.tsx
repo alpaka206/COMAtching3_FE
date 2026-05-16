@@ -18,14 +18,14 @@ function ContactMethodPick({ user, setUser }) {
         isActive={user.contact === "kakao"}
         onClick={() => handleContactMethod("kakao")}
         type="kakao"
-        image={`${import.meta.env.VITE_PUBLIC_URL}../../assets/kakao.svg`}
+        image="/assets/kakao.svg"
         alt="카카오아이디"
       />
       <ContactMethodButton
         isActive={user.contact === "instagram"}
         onClick={() => handleContactMethod("instagram")}
         type="instagram"
-        image={`${import.meta.env.VITE_PUBLIC_URL}../../assets/insta.svg`}
+        image="/assets/insta.svg"
         alt="인스타그램"
       />
     </div>

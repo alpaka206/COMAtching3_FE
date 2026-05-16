@@ -41,7 +41,6 @@ function ContactMethodInput({ handleChange, setIsContactVerified,user, setUser  
       setIsContactVerified(true);
     } else if (user.contact === "instagram") {
       if (!instagramPattern.test(user.contact_id)) {
-        console.log(user.contact_id);
         alert(
           "인스타 아이디는 @을 붙이고 영어, 숫자, 언더바(_), 마침표(.)만 가능합니다."
         );

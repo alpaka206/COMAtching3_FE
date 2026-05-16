@@ -14,7 +14,7 @@ function MatchOptionButton({ state, num, handleButtonClick, money }) {
         >
           <div className="match-premium-option-cost">
             <img
-              src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/point.svg`}
+              src="/assets/point.svg"
               alt="cost"
             />
             {money}
@@ -30,7 +30,7 @@ function MatchOptionButton({ state, num, handleButtonClick, money }) {
           }}
         >
           <img
-            src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/Backspace.svg`}
+            src="/assets/Backspace.svg"
             alt="닫기"
           />
         </button>

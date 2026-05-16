@@ -53,6 +53,8 @@
 - PR 본문에 이슈 번호, 변경 요약, 검증 결과, BE 영향 여부 기록.
 - PR 대상 브랜치가 `develop`인지 확인.
 - `main` 대상 PR은 `develop` 브랜치에서만 생성.
+- PR 본문 필수 섹션은 `이슈`, `변경 요약`, `검증`, `BE 영향`.
+- 보안/품질 영향은 PR 본문에 확인 결과 기록.
 
 ## 로컬 검증
 
@@ -60,5 +62,12 @@
 - 개발 서버: `npm run dev`
 - 빌드 확인: `npm run build`
 - 린트 확인: `npm run lint`
+- 브랜치 정책 확인: `npm run policy:branch`
 - 기존 QR 라이브러리 peer dependency 충돌 때문에 `.npmrc`의 `legacy-peer-deps=true` 유지.
 - 린트는 경고 없이 통과하는 상태 유지.
+
+## 협업 문서
+
+- 세부 협업 흐름: `docs/collaboration.md`
+- 보안/품질 점검표: `docs/security-quality-checklist.md`
+- 보안 신고 기준: `SECURITY.md`

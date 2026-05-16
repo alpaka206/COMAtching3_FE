@@ -30,6 +30,14 @@ export const logoImg = style({
     cursor: 'pointer',
     
 });
+export const logoButton = style({
+    appearance: 'none',
+    background: 'transparent',
+    border: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    lineHeight: 0,
+});
 export const right = style({
     width: '78px',
     height: '20px',
