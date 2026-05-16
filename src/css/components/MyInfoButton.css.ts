@@ -21,7 +21,7 @@ export const textWrapper = style({
   textAlign: 'left',
 });
 
-export const my_button_img = style({
+export const buttonImage = style({
   width: '100px',
   display: 'flex',
   margin: '0 12px 12px auto',

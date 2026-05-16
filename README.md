@@ -28,7 +28,10 @@ npm run build
 ## 라우팅 구조
 
 - `src/app`: Next.js App Router 라우트
-- `src/screens`: App Router 라우트에서 연결하는 클라이언트 화면
+- `src/app/<route>/_components`: 라우트별 클라이언트 화면 컴포넌트
+- `src/components`: 여러 라우트에서 공유하는 UI 컴포넌트
+- `src/hooks`: 공용 React Hook
+- `src/features`: 도메인별 기능 로직과 테스트
 - `src/app/providers.tsx`: 공통 클라이언트 Provider와 브라우저 외부 열기 처리
 - `src/lib/react-router-dom.tsx`: 기존 `react-router-dom` 사용처를 Next 라우터로 연결하는 호환 레이어
 

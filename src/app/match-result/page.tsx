@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const Matchresult = dynamic(() => import('@/screens/Matchresult'), {
+const MatchResultClient = dynamic(() => import('./_components/MatchResultClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <Matchresult />
+  return <MatchResultClient />
 }
