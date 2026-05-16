@@ -30,6 +30,7 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
           BASE_REF: ${{ github.base_ref }}
           HEAD_REF: ${{ github.head_ref }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           PR_FILES_URL: ${{ github.event.pull_request.url }}/files?per_page=100
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -44,6 +45,7 @@ jobs:
           body = os.environ["PR_BODY"]
           base_ref = os.environ["BASE_REF"]
           head_ref = os.environ["HEAD_REF"]
+          pr_author = os.environ["PR_AUTHOR"]
 
           title_pattern = re.compile(
               r"^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)"
@@ -53,31 +55,49 @@ jobs:
           branch_pattern = re.compile(
               r"^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|hotfix|release)/[a-z0-9._-]+$"
           )
+          dependabot_title_pattern = re.compile(
+              r"^chore\(deps(-dev)?\): bump .+ from .+ to .+$",
+              re.IGNORECASE,
+          )
           formal_pattern = re.compile(
               r"합니다|했습니다|됩니다|되었습니다|드립니다|부탁드립니다|바랍니다|주세요|주십시오|습니다|입니다|니다"
+          )
+          is_dependabot = (
+              pr_author in {"dependabot[bot]", "app/dependabot"}
+              or head_ref.startswith("dependabot/")
           )
 
           def fail(message: str) -> None:
               print(f"::error::{message}")
               sys.exit(1)
 
-          if not re.search(r"[가-힣]", title):
-              fail("PR 제목은 한국어 작성 필요")
+          if is_dependabot:
+              if not dependabot_title_pattern.match(title):
+                  fail("Dependabot PR 제목은 의존성 업데이트 형식 필요")
+          else:
+              if not re.search(r"[가-힣]", title):
+                  fail("PR 제목은 한국어 작성 필요")
 
-          if formal_pattern.search(title):
-              fail("PR 제목에 격식체 종결어 사용 금지")
+              if formal_pattern.search(title):
+                  fail("PR 제목에 격식체 종결어 사용 금지")
 
-          if not title_pattern.match(title):
-              fail("PR 제목은 'feat: 매칭 결과 화면 구현' 또는 'fix: 로그인 오류 수정' 같은 형식 필요")
+              if not title_pattern.match(title):
+                  fail("PR 제목은 'feat: 매칭 결과 화면 구현' 또는 'fix: 로그인 오류 수정' 같은 형식 필요")
 
           if base_ref == "main":
               if head_ref != "develop":
                   fail("main 대상 PR은 develop 브랜치에서만 생성")
           elif base_ref == "develop":
-              if not branch_pattern.match(head_ref):
+              if is_dependabot:
+                  if not head_ref.startswith("dependabot/"):
+                      fail("Dependabot PR은 dependabot/ 브랜치에서만 생성")
+              elif not branch_pattern.match(head_ref):
                   fail("develop 대상 PR은 type/short-description 형식의 이슈 브랜치에서 생성")
           else:
               fail("PR 대상 브랜치는 develop 또는 main만 허용")
+
+          if is_dependabot:
+              sys.exit(0)
 
           if not body:
               fail("PR 본문 입력 필요")

@@ -9,7 +9,7 @@ function MyInfoButton({ imgSrc, infoText, buttonText ,handleCharge}) {
         <div className={styles.valueText}>{infoText}</div>
       </div>
       <img
-        className={styles.my_button_img}
+        className={styles.buttonImage}
         src={imgSrc}
         alt="이미지"
         loading="lazy"

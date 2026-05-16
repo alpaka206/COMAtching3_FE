@@ -16,7 +16,7 @@ export const ROUTES = {
   matching: "/matching",
   matchResult: "/match-result",
   profileBuilder: "/profile-builder",
-  qrGenerator: "/QR-generator",
+  qrGenerator: "/qr-generator",
   redirection: "/redirection",
   userInfo: "/userinfo",
 } as const;
