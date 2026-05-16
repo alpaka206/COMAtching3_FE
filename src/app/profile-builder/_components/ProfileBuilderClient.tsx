@@ -5,8 +5,8 @@ import Footer from "@/components/Footer";
 import { TypeAnimation } from "react-type-animation";
 import { useSelectedMbtiState, useUserState } from "@/store/appStore";
 import { useNavigate } from "react-router-dom";
-import MemoizedShowQuestion from "@/components/ShowQuestion";
-import AnswerBox from "@/components/AnswerBox";
+import MemoizedShowQuestion from "./ShowQuestion";
+import AnswerBox from "./AnswerBox";
 import { QUESTIONS, MBTI_ANSWERS } from "@/data/questions";
 
 const initialShowQuestions = () => QUESTIONS.map(() => [false, false]);
@@ -48,7 +48,7 @@ const ProfileBuilderClient = () => {
   };
 
   // MBTI를 저장한 후 취미 페이지로 이동
-  const navigatehobby = () => {
+  const navigateToHobby = () => {
     setCurrentUserState((prev) => ({
       ...prev,
       mbti: `${selectedMBTI.EI}${selectedMBTI.SN}${selectedMBTI.TF}${selectedMBTI.PJ}`,
@@ -80,7 +80,7 @@ const ProfileBuilderClient = () => {
             setShowAnswerBox={setShowAnswerBox}
             chooseAnswer={chooseAnswer}
             handleShowQuestion={handleShowQuestion}
-            navigatehobby={navigatehobby}
+            navigateToHobby={navigateToHobby}
             showMbtiAnswers={MBTI_ANSWERS}
             questions={QUESTIONS}
           />

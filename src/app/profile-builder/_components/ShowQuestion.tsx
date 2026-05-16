@@ -9,14 +9,14 @@ function ShowQuestion({
   setShowAnswerBox,
   chooseAnswer,
   handleShowQuestion,
-  navigatehobby,
+  navigateToHobby,
   questions,
 }) {
   const handleNextStep = () => {
     if (QuestionNum < 4) {
       handleShowQuestion(QuestionNum + 1);
     } else {
-      navigatehobby();
+      navigateToHobby();
     }
   };
 

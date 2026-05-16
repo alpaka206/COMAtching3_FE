@@ -95,4 +95,6 @@ git config commit.template .gitmessage
 npm run policy:branch
 npm run lint
 npm run build
+npm test
+npm audit --omit=dev --audit-level=moderate
 ```

@@ -11,7 +11,7 @@ function GuideClient() {
       <HeaderBack />
       <div className="content">
         <Image
-          src="/assets/guide.png"
+          src="/assets/guide.webp"
           alt="서비스 이용 가이드"
           width={786}
           height={3050}

@@ -18,9 +18,13 @@
 - 토큰: URL, 로그, localStorage에 토큰 잔존 금지
 - 시크릿: `.env`, 빌드 로그, PR 본문 노출 금지
 - 의존성: Dependabot 보안 알림 우선 처리
+- 의존성 감사: 보안/의존성 PR은 `npm audit --omit=dev --audit-level=moderate` 확인
+- 외부 링크: 새 탭 이동 시 `rel="noopener noreferrer"` 확인
+- 오류 로그: API 원문 토큰, 연락처, 계정 식별자 출력 금지
 - Firebase: 의존성, 설정, 배포 문서 추가 금지
 
 ## PR 기록 기준
 
 보안 영향이 없더라도 PR 본문 `보안/품질 확인` 항목에 확인 결과 기록.
 BE API 계약 변경이 필요한 경우 `BE 영향` 항목에 요청/응답 변경 내용 기록.
+CSRF 방어가 BE 쿠키 정책에 의존하는 경우 PR 본문에 BE 확인 필요 여부 기록.

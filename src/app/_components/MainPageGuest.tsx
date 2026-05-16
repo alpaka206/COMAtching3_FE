@@ -53,7 +53,7 @@ function MainPageGuest() {
   }, [setNumParticipants]);
 
   return (
-    <div className="container">
+    <main className="container">
       <Background />
       <div className="margin_top"></div>
       <div className="bubble-counter">
@@ -94,7 +94,7 @@ function MainPageGuest() {
         </div>  
         <Footer /> 
         
-    </div>
+    </main>
   );
 }
 

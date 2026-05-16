@@ -13,7 +13,10 @@
 
 - Next.js App Router + TypeScript 기준 작업.
 - 라우트별 클라이언트 화면은 `src/app/<route>/_components/*Client.tsx` 기준으로 작성.
-- 공용 컴포넌트는 `src/components`, 공용 Hook은 `src/hooks`, 기능 로직은 `src/features`, 유틸은 `src/lib` 기준으로 배치.
+- 라우트에서만 쓰는 섹션/보조 컴포넌트는 같은 라우트의 `src/app/<route>/_components`에 배치.
+- 두 개 이상 라우트에서 재사용하는 UI만 `src/components`에 배치.
+- 매칭 요청 생성, 선택 가능 여부 계산처럼 화면과 분리 가능한 도메인 로직은 `src/features/<domain>`에 배치.
+- 공용 Hook은 `src/hooks`, 브라우저/인증/라우팅 유틸은 `src/lib` 기준으로 배치.
 - 신규 화면/공용 코드는 `.tsx` 또는 JSX가 없는 경우 `.ts`로 작성.
 - 기존 `react-router-dom` 사용처는 `src/lib/react-router-dom.tsx` 호환 레이어 기준 연결.
 - 브라우저 전용 레거시 화면은 `dynamic(..., { ssr: false })` 기준 연결.

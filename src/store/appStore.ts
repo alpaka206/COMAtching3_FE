@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import type { Dispatch, SetStateAction } from "react";
+import type { MatchRequestPayload } from "@/features/matching/types";
 
 type StateUpdater<T> = SetStateAction<T>;
 type StoreSetter<T> = Dispatch<StateUpdater<T>>;
@@ -52,7 +53,7 @@ export type MatchPickState = {
     contactFrequencyOption?: string;
     sameMajorOption?: boolean;
     match_code?: string;
-    FormData?: unknown;
+    requestPayload?: MatchRequestPayload;
   };
 };
 

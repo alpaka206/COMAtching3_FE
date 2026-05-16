@@ -5,7 +5,7 @@ import { useSelectedMbtiState, useUserState } from "@/store/appStore";
 import { useNavigate } from "react-router-dom";
 import MyInput from "@/components/MyInput";
 import MajorSelector from "@/components/MajorSelector";
-import AgeInputInput from "@/components/AgeInput";
+import AgeInput from "@/components/AgeInput";
 import ContactMethod from "@/components/ContactMethod";
 import GenderSelect from "@/components/GenderSelect";
 import MBTISection from "@/components/MBTISection";
@@ -231,7 +231,7 @@ function UserInfoClient() {
                         checkMethod={checkMethod}
                         setCheckMethod={setCheckMethod}
                     />
-                    <AgeInputInput value={user.age} onChange={handleChange} />
+                    <AgeInput value={user.age} onChange={handleChange} />
                     <AdmissionYearInput value={user.admissionYear} onChange={handleChange} />
                     <h3>MBTI</h3>
                     <MBTISection

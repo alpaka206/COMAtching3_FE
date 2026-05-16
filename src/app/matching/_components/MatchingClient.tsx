@@ -8,21 +8,23 @@ import {
   useResetMatchPickState,
   useResetMatchResultState,
 } from "@/store/appStore";
-import ClassMatchOptionButton from "@/components/ClassMatchOptionButton";
 import MBTISection from "@/components/MBTISection";
-import AgeButton from "@/components/AgeButton";
-import MatchOptionButton from "@/components/MatchOptionButton";
 import hobbyIcons from "@/data/hobbyIcons"; // 취미 아이콘 데이터 가져오기
 import Loading from "@/app/loading/_components/LoadingClient";
 import HeaderBackPoint from "@/components/HeaderBackPoint";
 import instance from "@/axiosConfig";
 import { createMatchRequestPayload } from "@/features/matching/createMatchRequestPayload";
+import { getMatchOptionReadiness } from "@/features/matching/getMatchOptionReadiness";
+import { getMbtiCategoryIndex } from "@/features/matching/getMbtiCategoryIndex";
 import { useCurrentPoint } from "@/hooks/useCurrentPoint";
+import AgeButton from "./AgeButton";
+import ClassMatchOptionButton from "./ClassMatchOptionButton";
+import MatchOptionButton from "./MatchOptionButton";
 
 const SWIPE_COMPLETE_POSITION = 252;
 
 function MatchingClient() {
-  const [MatchState, setMatchState] = useMatchPickState();
+  const [matchState, setMatchState] = useMatchPickState();
   const [currentPoint, setUserPoint] = useCurrentPoint();
   const [imagePosition, setImagePosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -30,16 +32,17 @@ function MatchingClient() {
   const startX = useRef(0);
   const imagePositionRef = useRef(0);
   const animationFrameRef = useRef(null);
-  const [, setMatchPageResult] =
-    useMatchResultState();
+  const [, setMatchResult] = useMatchResultState();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const resetMatchState = useResetMatchPickState();
   const resetMatchResultState = useResetMatchResultState();
-  const isAgeSelected = MatchState.isUseOption[0] ? (MatchState.formData.ageOption || "") !== "" : true;
-  const isContactFrequencySelected = MatchState.isUseOption[1] ? (MatchState.formData.contactFrequencyOption || "") !== "" : true;
-  const isHobbySelected = MatchState.isUseOption[2] ? (MatchState.formData.hobbyOption || []).length > 0 : true;
-  const isButtonEnabled = isMBTISelected && isAgeSelected && isContactFrequencySelected && isHobbySelected;
+  const {
+    isAgeSelected,
+    isContactFrequencySelected,
+    isHobbySelected,
+    isSubmitEnabled,
+  } = getMatchOptionReadiness(matchState, isMBTISelected);
 
   useEffect(() => {
     return () => {
@@ -49,12 +52,12 @@ function MatchingClient() {
     };
   }, []);
   const handleHobbyClick = (index) => {
-    const isAlreadySelected = MatchState.formData.hobbyOption.includes(index);
+    const isAlreadySelected = matchState.formData.hobbyOption.includes(index);
     const updatedHobbies = isAlreadySelected
-      ? MatchState.formData.hobbyOption.filter((hobby) => hobby !== index)
-      : MatchState.formData.hobbyOption.length < 5
-      ? [...MatchState.formData.hobbyOption, index]
-      : MatchState.formData.hobbyOption;
+      ? matchState.formData.hobbyOption.filter((hobby) => hobby !== index)
+      : matchState.formData.hobbyOption.length < 5
+      ? [...matchState.formData.hobbyOption, index]
+      : matchState.formData.hobbyOption;
 
     setMatchState((prev) => ({
       ...prev,
@@ -92,7 +95,7 @@ function MatchingClient() {
   };
 
   const handleStart = (e) => {
-    if (MatchState.point > currentPoint) {
+    if (matchState.point > currentPoint) {
       alert("포인트가 부족합니다!!");
       return; // 동작 중단
     }
@@ -116,23 +119,12 @@ function MatchingClient() {
   };
   const handleEnd = async () => {
     if (!isDragging) return;
-    if (MatchState.point > currentPoint) {
+    if (matchState.point > currentPoint) {
       alert("포인트가 부족합니다!!");
       resetImagePosition();
       return; // 동작 중단
     }
     setIsDragging(false);
-
-    // 필수 선택 확인
-    const isAgeSelected = MatchState.isUseOption[0]
-      ? MatchState.formData.ageOption !== ""
-      : true;
-    const isContactFrequencySelected = MatchState.isUseOption[1]
-      ? MatchState.formData.contactFrequencyOption !== ""
-      : true;
-    const isHobbySelected = MatchState.isUseOption[2]
-      ? MatchState.formData.hobbyOption.length > 0
-      : true;
 
     if (!isAgeSelected) {
       alert("나이를 선택해 주세요.");
@@ -153,12 +145,12 @@ function MatchingClient() {
       return;
     }
 
-    const FormData = createMatchRequestPayload(MatchState);
+    const matchRequestPayload = createMatchRequestPayload(matchState);
     setMatchState((prev) => ({
       ...prev,
       formData: {
         ...prev.formData,
-        FormData,
+        requestPayload: matchRequestPayload,
       },
     }));
     
@@ -167,11 +159,11 @@ function MatchingClient() {
       setLoading(true);
       const response = await instance.post(
         "/auth/user/api/match/request",
-        FormData
+        matchRequestPayload
       );
       
       if (response.status === 200) {
-        await setMatchPageResult((prev) => ({
+        setMatchResult((prev) => ({
           ...prev,
           age: response.data.data.age,
           comment: response.data.data.comment,
@@ -184,7 +176,7 @@ function MatchingClient() {
           socialId: response.data.data.contactId,
           song: response.data.data.song,
         }));
-        await setUserPoint((prev) => ({
+        setUserPoint((prev) => ({
           ...prev,
           point: response.data.data.currentPoint,
         }));
@@ -206,14 +198,7 @@ function MatchingClient() {
   // MBTI 선택 핸들러
   const handleMBTISelection = (value) => {
     // 선택한 것의 카테고리 구분
-    const category =
-      value === "E" || value === "I"
-        ? 0
-        : value === "S" || value === "N"
-        ? 1
-        : value === "T" || value === "F"
-        ? 2
-        : 3;
+    const category = getMbtiCategoryIndex(value);
 
     setMatchState((prev) => {
       const updatedMBTI = [...prev.selectedMBTI];
@@ -297,7 +282,7 @@ function MatchingClient() {
               </div>
             </div>
             <MBTISection
-              user={MatchState.selectedMBTI}
+              user={matchState.selectedMBTI}
               onClick={handleMBTISelection}
               name="MBTIButton"
             />
@@ -317,7 +302,7 @@ function MatchingClient() {
                   </div>
                 </div>
                 <MatchOptionButton
-                  state={MatchState.isUseOption[0]}
+                  state={matchState.isUseOption[0]}
                   num={0}
                   money={100}
                   handleButtonClick={(e) => {
@@ -328,28 +313,28 @@ function MatchingClient() {
               </div>
             </div>
             {/* MatchOptionButton 클릭 시만 나이 선택 버튼 표시 */}
-            {MatchState.isUseOption[0] && (
+            {matchState.isUseOption[0] && (
               <div className="match-select-button">
                 <AgeButton
-                  formData={MatchState.formData.ageOption}
+                  formData={matchState.formData.ageOption}
                   value="YOUNGER"
                   text="연하"
                   onClick={() => handleAgeSelection("YOUNGER", "ageOption")}
-                  isClickable={MatchState.isUseOption[0]}
+                  isClickable={matchState.isUseOption[0]}
                 />
                 <AgeButton
-                  formData={MatchState.formData.ageOption}
+                  formData={matchState.formData.ageOption}
                   value="EQUAL"
                   text="동갑"
                   onClick={() => handleAgeSelection("EQUAL", "ageOption")}
-                  isClickable={MatchState.isUseOption[0]}
+                  isClickable={matchState.isUseOption[0]}
                 />
                 <AgeButton
-                  formData={MatchState.formData.ageOption}
+                  formData={matchState.formData.ageOption}
                   text="연상"
                   value="OLDER"
                   onClick={() => handleAgeSelection("OLDER", "ageOption")}
-                  isClickable={MatchState.isUseOption[0]}
+                  isClickable={matchState.isUseOption[0]}
                 />
               </div>
             )}
@@ -369,7 +354,7 @@ function MatchingClient() {
                   </div>
                 </div>
                 <MatchOptionButton
-                  state={MatchState.isUseOption[1]}
+                  state={matchState.isUseOption[1]}
                   num={1}
                   money={100}
                   handleButtonClick={(e) => {
@@ -379,28 +364,28 @@ function MatchingClient() {
                 />
               </div>
             </div>
-            {MatchState.isUseOption[1] && (
+            {matchState.isUseOption[1] && (
               <div className="match-select-button">
                 <AgeButton
-                  formData={MatchState.formData.contactFrequencyOption}
+                  formData={matchState.formData.contactFrequencyOption}
                   text="자주"
                   value="FREQUENT"
                   onClick={() =>
                     handleAgeSelection("FREQUENT", "contactFrequencyOption")
                   }
-                  isClickable={MatchState.isUseOption[1]}
+                  isClickable={matchState.isUseOption[1]}
                 />
                 <AgeButton
-                  formData={MatchState.formData.contactFrequencyOption}
+                  formData={matchState.formData.contactFrequencyOption}
                   text="보통"
                   value="NORMAL"
                   onClick={() =>
                     handleAgeSelection("NORMAL", "contactFrequencyOption")
                   }
-                  isClickable={MatchState.isUseOption[1]}
+                  isClickable={matchState.isUseOption[1]}
                 />
                 <AgeButton
-                  formData={MatchState.formData.contactFrequencyOption}
+                  formData={matchState.formData.contactFrequencyOption}
                   text="가끔"
                   value="NOT_FREQUENT"
                   onClick={() =>
@@ -409,7 +394,7 @@ function MatchingClient() {
                       "contactFrequencyOption"
                     )
                   }
-                  isClickable={MatchState.isUseOption[1]}
+                  isClickable={matchState.isUseOption[1]}
                 />
               </div>
             )}
@@ -429,7 +414,7 @@ function MatchingClient() {
                   </div>
                 </div>
                 <MatchOptionButton
-                  state={MatchState.isUseOption[2]}
+                  state={matchState.isUseOption[2]}
                   num={2}
                   money={100}
                   handleButtonClick={(e) => {
@@ -439,16 +424,16 @@ function MatchingClient() {
                 />
               </div>
             </div>
-            {MatchState.isUseOption[2] && (
+            {matchState.isUseOption[2] && (
               <div className="match-hobby-grid">
                 {hobbyIcons.map((hobby, index) => (
                   <button
                     type="button"
                     key={index}
                     className={`hobby-item ${
-                      MatchState.isUseOption[2]
+                      matchState.isUseOption[2]
                         ? `${
-                            MatchState.formData.hobbyOption.includes(
+                            matchState.formData.hobbyOption.includes(
                               hobby.label
                             )
                               ? "selected"
@@ -457,7 +442,7 @@ function MatchingClient() {
                         : " "
                     }`}
                     onClick={() => handleHobbyClick(hobby.label)}
-                    disabled={!MatchState.isUseOption[2]}
+                    disabled={!matchState.isUseOption[2]}
                   >
                     <img
                       src={hobby.image}
@@ -487,7 +472,7 @@ function MatchingClient() {
                   </div>
                 </div>
                 <ClassMatchOptionButton
-                  state={MatchState.isUseOption[3]}
+                  state={matchState.isUseOption[3]}
                   num={3}
                   money={200}
                   handleButtonClick={(e) => {
@@ -501,36 +486,33 @@ function MatchingClient() {
           <div
             className="cost-bubble"
             style={{
-              display:
-              isMBTISelected && MatchState.point > 0
-                  ? "block"
-                  : "none",
+              display: isMBTISelected && matchState.point > 0 ? "block" : "none",
             }}
           >
             <img src="/assets/footercoin.svg" alt="coin" />
-            <span>{MatchState.point}P 소모</span>
+            <span>{matchState.point}P 소모</span>
           </div>
 
           <div
             className="footer_btn"
-            onMouseMove={isButtonEnabled   ? handleMove : null}
-            onMouseUp={isButtonEnabled   ? handleEnd : null}
-            onTouchMove={isButtonEnabled   ? handleMove : null}
-            onTouchEnd={isButtonEnabled   ? handleEnd : null}
+            onMouseMove={isSubmitEnabled ? handleMove : null}
+            onMouseUp={isSubmitEnabled ? handleEnd : null}
+            onTouchMove={isSubmitEnabled ? handleMove : null}
+            onTouchEnd={isSubmitEnabled ? handleEnd : null}
           >
             <div
               className="footer_btn_box"
               style={{
-                backgroundColor: isButtonEnabled   ? "white" : "lightgray",
-                opacity: isButtonEnabled   ? 1 : 0.5,
-                boxShadow: isButtonEnabled  
+                backgroundColor: isSubmitEnabled ? "white" : "lightgray",
+                opacity: isSubmitEnabled ? 1 : 0.5,
+                boxShadow: isSubmitEnabled
                   ? "0px 4px 12px rgba(0, 0, 0, 0.1)"
                   : "none",
               }}
             >
               <img
                 src={
-                  isButtonEnabled  
+                  isSubmitEnabled
                     ? "/assets/slider_active.svg"
                     : "/assets/slider.svg"
                 } // 이미지 변경
@@ -538,16 +520,14 @@ function MatchingClient() {
                 style={{
                   transform: `translateX(${imagePosition}px)`,
                   willChange: isDragging ? "transform" : "auto",
-                  touchAction: isButtonEnabled ? "none" : "auto",
-                  cursor: isButtonEnabled   ? "pointer" : "not-allowed",
+                  touchAction: isSubmitEnabled ? "none" : "auto",
+                  cursor: isSubmitEnabled ? "pointer" : "not-allowed",
                 }} // 커서 변경
                 onMouseDown={handleStart}
                 onTouchStart={handleStart}
               />
               <p>
-                {isButtonEnabled  
-                ? "밀어서 커플되기"
-                : "조건을 선택해 주세요"}
+                {isSubmitEnabled ? "밀어서 커플되기" : "조건을 선택해 주세요"}
               </p>
             </div>
           </div>
