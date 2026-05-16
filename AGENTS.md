@@ -12,7 +12,8 @@
 ## 기술 기준
 
 - Next.js App Router + TypeScript 기준 작업.
-- 화면 구현은 `src/screens`의 `.tsx` 파일 기준으로 작성.
+- 라우트별 클라이언트 화면은 `src/app/<route>/_components/*Client.tsx` 기준으로 작성.
+- 공용 컴포넌트는 `src/components`, 공용 Hook은 `src/hooks`, 기능 로직은 `src/features`, 유틸은 `src/lib` 기준으로 배치.
 - 신규 화면/공용 코드는 `.tsx` 또는 JSX가 없는 경우 `.ts`로 작성.
 - 기존 `react-router-dom` 사용처는 `src/lib/react-router-dom.tsx` 호환 레이어 기준 연결.
 - 브라우저 전용 레거시 화면은 `dynamic(..., { ssr: false })` 기준 연결.

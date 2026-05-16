@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const ProfileBuilder = dynamic(() => import('@/screens/ProfileBuilder'), {
+const ProfileBuilderClient = dynamic(() => import('./_components/ProfileBuilderClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <ProfileBuilder />
+  return <ProfileBuilderClient />
 }

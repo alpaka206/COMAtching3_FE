@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic'
 
-const Guide = dynamic(() => import('@/screens/Guide'), { ssr: false })
+const GuideClient = dynamic(() => import('./_components/GuideClient'), { ssr: false })
 
 export default function Page() {
-  return <Guide />
+  return <GuideClient />
 }

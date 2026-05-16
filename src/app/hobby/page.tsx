@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const Hobbyform = dynamic(() => import('@/screens/Hobbyform'), {
+const HobbyClient = dynamic(() => import('./_components/HobbyClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <Hobbyform />
+  return <HobbyClient />
 }

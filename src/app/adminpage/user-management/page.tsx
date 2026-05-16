@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const UserManagementPage = dynamic(() => import('@/screens/UserManagementPage'), {
+const UserManagementClient = dynamic(() => import('./_components/UserManagementClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <UserManagementPage />
+  return <UserManagementClient />
 }

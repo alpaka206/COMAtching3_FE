@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic'
 
-const Matching = dynamic(() => import('@/screens/Matching'), { ssr: false })
+const MatchingClient = dynamic(() => import('./_components/MatchingClient'), { ssr: false })
 
 export default function Page() {
-  return <Matching />
+  return <MatchingClient />
 }
