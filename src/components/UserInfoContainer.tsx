@@ -6,7 +6,7 @@ import * as styles from "../css/components/UserInfoContainer.css";
 function UserInfoContainer({
   FirstTopic,
   FirstText,
-  SecoundTopic,
+  SecondTopic,
   SecondText,
 }) {
   return (
@@ -20,7 +20,7 @@ function UserInfoContainer({
           <UserInfoElement Topic={FirstTopic} Text={FirstText} />
         </div>
         <div className={styles.secondItem}>
-          <UserInfoElement Topic={SecoundTopic} Text={SecondText} />
+          <UserInfoElement Topic={SecondTopic} Text={SecondText} />
         </div>
       </div>
     </Fragment>

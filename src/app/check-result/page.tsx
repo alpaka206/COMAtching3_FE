@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const Checkresult = dynamic(() => import('@/screens/Checkresult'), {
+const CheckResultClient = dynamic(() => import('./_components/CheckResultClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <Checkresult />
+  return <CheckResultClient />
 }

@@ -16,10 +16,10 @@ export const age = style({
   marginBottom : '24px'
 });
 
-export const agetitle = style({
+export const title = style({
   marginTop:"0px"
 });
-export const myinput = style({
+export const defaultInput = style({
   flex: 1,
   
 });

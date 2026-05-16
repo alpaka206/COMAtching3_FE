@@ -76,6 +76,11 @@ API 요청/응답 변경이 있으면 BE 확인 필요 항목에 명확히 기�
 - PR 제목/본문의 격식체 종결어 사용 방지
 - Firebase 의존성 추가 방지
 
+### Dependabot PR 예외
+
+Dependabot이 자동 생성한 PR은 `dependabot/*` 브랜치와 `chore(deps...)` 제목 형식 허용.
+본문 한국어/필수 섹션 검사는 제외하되 Firebase 의존성 추가 방지는 동일하게 적용.
+
 ## 로컬 설정
 
 커밋 메시지 템플릿 적용:

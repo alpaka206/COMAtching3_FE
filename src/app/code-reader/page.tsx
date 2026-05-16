@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const CodeReader = dynamic(() => import('@/screens/CodeReader'), {
+const CodeReaderClient = dynamic(() => import('./_components/CodeReaderClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <CodeReader />
+  return <CodeReaderClient />
 }

@@ -22,7 +22,7 @@ function AdmissionYearInput({ value, onChange }) {
 
     return (
         <Fragment>
-        <h3 className={styles.agetitle}>입학년도</h3>
+        <h3 className={styles.title}>입학년도</h3>
         <div className={styles.age}>
             <MyInput
             name="admissionYear"

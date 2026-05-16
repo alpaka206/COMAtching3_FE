@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic'
 
-const Describe = dynamic(() => import('@/screens/Describe'), { ssr: false })
+const DescribeClient = dynamic(() => import('./_components/DescribeClient'), { ssr: false })
 
 export default function Page() {
-  return <Describe />
+  return <DescribeClient />
 }
