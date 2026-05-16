@@ -7,17 +7,21 @@ function HeaderMain() {
 
   return (
     <div className={styles.header}>
-      <div>
-        <object
+      <button
+        type="button"
+        className={styles.logoButton}
+        onClick={() => navigate("/")}
+        aria-label="홈으로 이동"
+      >
+        <img
           className={styles.logoImg}
-          data={`${import.meta.env.VITE_PUBLIC_URL}../../assets/logoblacknav.svg`}
-          type="image/svg+xml"
-          aria-label="로고"
-          onClick={() => navigate("/")}
-        >
-          <span>로고</span>
-        </object>
-      </div>
+          src="/assets/logoblacknav.webp"
+          alt=""
+          width="140"
+          height="40"
+          decoding="async"
+        />
+      </button>
     </div>
   );
 }

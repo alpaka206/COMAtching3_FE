@@ -14,6 +14,10 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   policy:
     name: 대상 브랜치와 제목 확인
@@ -23,13 +27,27 @@ jobs:
       - name: PR 규칙 검사
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
           BASE_REF: ${{ github.base_ref }}
           HEAD_REF: ${{ github.head_ref }}
+          PR_FILES_URL: ${{ github.event.pull_request.url }}/files?per_page=100
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
           title_pattern='^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|revert)(\([a-zA-Z0-9._/-]+\))?: .+ (구현|수정|개선|정리|삭제|추가|변경|대응|분리|연동|설정|보완|마이그레이션)$'
           branch_pattern='^(feat|fix|docs|style|refactor|test|chore|ci|perf|build|hotfix|release)/[a-z0-9._-]+$'
+          formal_pattern='합니다|했습니다|됩니다|되었습니다|드립니다|부탁드립니다|바랍니다|주세요|주십시오|습니다|입니다|니다'
+
+          if [[ ! "$PR_TITLE" =~ [가-힣] ]]; then
+            echo "::error::PR 제목은 한국어 작성 필요"
+            exit 1
+          fi
+
+          if [[ "$PR_TITLE" =~ $formal_pattern ]]; then
+            echo "::error::PR 제목에 격식체 종결어 사용 금지"
+            exit 1
+          fi
 
           if [[ ! "$PR_TITLE" =~ $title_pattern ]]; then
             echo "::error::PR 제목은 'feat: 매칭 결과 화면 구현' 또는 'fix: 로그인 오류 수정' 같은 형식 필요"
@@ -48,5 +66,37 @@ jobs:
             fi
           else
             echo "::error::PR 대상 브랜치는 develop 또는 main만 허용"
+            exit 1
+          fi
+
+          if [[ -z "$PR_BODY" ]]; then
+            echo "::error::PR 본문 입력 필요"
+            exit 1
+          fi
+
+          if [[ ! "$PR_BODY" =~ [가-힣] ]]; then
+            echo "::error::PR 본문은 한국어 작성 필요"
+            exit 1
+          fi
+
+          if [[ "$PR_BODY" =~ $formal_pattern ]]; then
+            echo "::error::PR 본문에 격식체 종결어 사용 금지"
+            exit 1
+          fi
+
+          for section in "## 이슈" "## 변경 요약" "## 검증" "## BE 영향"; do
+            if [[ "$PR_BODY" != *"$section"* ]]; then
+              echo "::error::PR 본문 필수 섹션 누락: $section"
+              exit 1
+            fi
+          done
+
+          files_json="$(curl -fsSL \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$PR_FILES_URL")"
+
+          if echo "$files_json" | jq -e '.[] | select(.filename == "package.json" or .filename == "package-lock.json") | (.patch // "") | test("\\+.*(firebase|@firebase/)"; "i")' >/dev/null; then
+            echo "::error::Firebase 의존성 추가 금지"
             exit 1
           fi

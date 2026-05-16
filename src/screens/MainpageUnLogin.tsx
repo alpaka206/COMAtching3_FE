@@ -29,6 +29,16 @@ function MainpageUnLogin() {
   useEffect(() => {
     // 컴포넌트가 마운트될 때 API 요청을 보냄
     const fetchData = async () => {
+      const isLocalHost = ["localhost", "127.0.0.1"].includes(
+        window.location.hostname
+      );
+      const usesDefaultApi = API_BASE_URL === "https://cuk.comatching.site";
+
+      if (isLocalHost && usesDefaultApi) {
+        setNumParticipants(null);
+        return;
+      }
+
       try {
         const response = await publicInstance.get("/api/participations");
         
@@ -66,8 +76,11 @@ function MainpageUnLogin() {
         <button className="kakao-login" type="button" onClick={handleLogin}>
             <div className="kakao-login-element">
               <img
-                src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/kakao.svg`}
+                src="/assets/kakao.svg"
                 alt="카카오"
+                width="25"
+                height="24"
+                decoding="async"
               />
               <p>카카오로 시작하기</p>
             </div>

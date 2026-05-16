@@ -2,12 +2,12 @@
 
 import type { ReactNode } from 'react'
 
-import OpenExternalBrowser from '@/OpenExternalBrowser'
+import InAppBrowserRedirect from '@/components/InAppBrowserRedirect'
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <div className="App">
-      <OpenExternalBrowser />
+      <InAppBrowserRedirect />
       {children}
     </div>
   )

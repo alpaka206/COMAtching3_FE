@@ -174,7 +174,7 @@ function MainpageLogin({ onLogout }) {
         <div className="button-group">
           {userInfo.canRequestCharge ? (
             <MyInfoButton
-              imgSrc={`../../assets/point.svg`}
+              imgSrc="/assets/point.svg"
               infoText={`${userInfo.point}P`}
               buttonText="잔여포인트"
               handleCharge={handleCharge} 
@@ -183,14 +183,14 @@ function MainpageLogin({ onLogout }) {
             />
           ) : (
             <MyInfoButton
-              imgSrc={`../../assets/point.svg`}
+              imgSrc="/assets/point.svg"
               infoText={`${userInfo.point}P`}
               buttonText="잔여포인트"
               handleCharge={null} // canRequestCharge가 false일 때 handleCharge는 null
             />
           )}
           <MyInfoButton
-            imgSrc={`../../assets/heart.svg`}
+            imgSrc="/assets/heart.svg"
             infoText={`${userInfo.pickMe}회`}
             buttonText="내가 뽑힐 횟수"
             handleCharge={handlehartCharge}
@@ -216,9 +216,7 @@ function MainpageLogin({ onLogout }) {
                 // onClick={handleNotService}
               >
                 <img
-                  src={`${
-                    import.meta.env.VITE_PUBLIC_URL
-                  }../../assets/arrowbottom.svg`}
+                  src="/assets/arrowbottom.svg"
                   alt="충전요청 열기"
                 />
               </button>
@@ -241,9 +239,7 @@ function MainpageLogin({ onLogout }) {
                 onClick={handleNotService}
               >
                 <img
-                  src={`${
-                    import.meta.env.VITE_PUBLIC_URL
-                  }../../assets/arrowbottom.svg`}
+                  src="/assets/arrowbottom.svg"
                   alt="충전요청 열기"
                 />
               </button>
@@ -268,9 +264,7 @@ function MainpageLogin({ onLogout }) {
               // onClick={handleNotService}
             >
               <img
-                src={`${
-                  import.meta.env.VITE_PUBLIC_URL
-                }../../assets/arrowbottom.svg`}
+                src="/assets/arrowbottom.svg"
                 alt="충전요청 열기"
               />
             </button>
@@ -280,13 +274,13 @@ function MainpageLogin({ onLogout }) {
           <BottomNavButton
             // onClick={handleNotService}
             onClick={handleVisitcheckresult}
-            imgSrc={`../../assets/checkresult.svg`}
+            imgSrc="/assets/checkresult.svg"
             imgText="조회버튼"
             buttonText="조회하기"
           />
           <BottomNavButton
             onClick={handleVisitGuide}
-            imgSrc={`../../assets/guidebook.svg`}
+            imgSrc="/assets/guidebook.svg"
             imgText="가이드북"
             buttonText="가이드북"
           />

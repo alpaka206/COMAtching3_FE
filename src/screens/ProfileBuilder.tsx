@@ -66,7 +66,6 @@ const ProfileBuilder = () => {
               "반가워요! Comatching AI가 매칭 상대를 찾기 위한 몇가지 간단한 질의응답을 진행하겠습니다. 😊",
               1000,
               () => handleShowQuestion(0),
-              () => console.log(showQuestions),
             ]}
             speed={85}
             className="typing-animation"

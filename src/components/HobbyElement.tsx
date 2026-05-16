@@ -8,7 +8,7 @@ function HobbyElement({ index, hobby, className }) {
 
   return (
     <div key={index} className={className}>
-      <img src={hobby.image} alt={hobby.alt} />
+      <img src={hobby.image} alt={hobby.alt} loading="lazy" decoding="async" />
       <div>{hobby.label}</div>
     </div>
   );

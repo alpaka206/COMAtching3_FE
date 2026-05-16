@@ -21,12 +21,19 @@ function AdminNavbar() {
   return (
     <div className="admin-navbar">
       {/* 로고 */}
-      <img src="/assets/admin_logo.svg" alt="Logo" className="logo" />
+      <img
+        src="/assets/admin_logo.webp"
+        alt="Logo"
+        className="logo"
+        width="140"
+        height="40"
+        decoding="async"
+      />
 
       {/* 햄버거 메뉴 아이콘 */}
-      <div className="hamburger-menu" onClick={toggleMenu}>
+      <button className="hamburger-menu" type="button" onClick={toggleMenu}>
         &#9776;
-      </div>
+      </button>
 
       {/* 메뉴 */}
       <div className={`menu ${menuOpen ? "open" : ""}`}>

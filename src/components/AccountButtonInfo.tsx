@@ -18,7 +18,7 @@ function AccountButtonInfo({handleToggleClick,accountNumber}) {
                 //onClick={handleNotService}
                 >
                     <img
-                        src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/arrowup.svg`}
+                        src="/assets/arrowup.svg"
                         alt="충전요청 닫기"
                     />
                 </button>
@@ -28,7 +28,7 @@ function AccountButtonInfo({handleToggleClick,accountNumber}) {
                 <p className="account-holder">{}</p>
                 
             </div>
-            <button className="copy-button" onClick={copyToClipboard}>클립보드 복사</button>
+            <button className="copy-button" type="button" onClick={copyToClipboard}>클립보드 복사</button>
         </div>
     );
 }

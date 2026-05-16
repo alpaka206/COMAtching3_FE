@@ -13,6 +13,8 @@ function ContactMethodButton({ isActive, onClick, image, alt }) {
         src={image} 
         alt={alt} 
         className={`${styles.contactMethodButtonImg} ${isActive ? styles.activeImg : ""}`}
+        loading="lazy"
+        decoding="async"
       />
     </button>
   );

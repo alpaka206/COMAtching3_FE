@@ -12,6 +12,7 @@
 git switch develop
 git pull origin develop
 git switch -c feat/example-feature
+npm run policy:branch
 ```
 
 ## 브랜치 이름
@@ -59,17 +60,36 @@ PR 제목은 커밋 제목과 같은 규칙 사용.
 - 대상 브랜치가 `develop`인지 확인.
 - 배포 PR만 대상 브랜치를 `main`으로 설정.
 - `main` 대상 PR의 출발 브랜치는 `develop`만 허용.
+- PR 본문에 이슈 번호, 변경 요약, 검증 결과, BE 영향 여부 기록.
+- PR 제목과 본문은 한국어 명사형 기준 작성.
+- `합니다`, `했습니다`, `됩니다` 같은 격식체 종결 사용 금지.
 - BE API 변경, 응답 형식 변경, 인증 정책 변경이 있으면 PR 본문에 기록.
 - Firebase 관련 설정이나 의존성 재추가 금지.
+
+## 로컬 정책 검사
+
+```bash
+npm run policy:branch
+```
+
+로컬 커밋 메시지 템플릿 설정:
+
+```bash
+git config commit.template .gitmessage
+```
 
 ## 로컬 실행
 
 ```bash
 npm ci
 npm run dev
+npm run policy:branch
 npm run build
 npm run lint
 ```
 
 기존 QR 라이브러리의 React peer dependency 충돌 때문에 npm 설치는 `.npmrc` 기준 사용.
-현재 린트는 레거시 코드 복구를 위해 경고 중심 운영.
+린트는 경고 없이 통과하는 상태 유지.
+
+세부 협업 규칙은 [docs/collaboration.md](./docs/collaboration.md) 확인.
+보안/품질 점검표는 [docs/security-quality-checklist.md](./docs/security-quality-checklist.md) 확인.

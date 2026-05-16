@@ -9,7 +9,7 @@ import MemoizedHobbyChoice from "../components/HobbyChoice";
 
 function Hobbyform() {
   const navigate = useNavigate();
-  const [user, setUser] = useUserState(); 
+  const [, setUser] = useUserState();
   const [pickHobby, setPickHobby] = useUserState();
 
   const handleSubmit = () => {
@@ -21,7 +21,6 @@ function Hobbyform() {
       ...prevUser,
       hobby: pickHobby.hobby,
     }));
-    console.log(user);
     navigate("/userinfo");
   };
 

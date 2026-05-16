@@ -17,7 +17,7 @@ function HartButtonInfo({
             //onClick={handleNotService}
             >
             <img
-                src={`${import.meta.env.VITE_PUBLIC_URL}../../assets/arrowup.svg`}
+                src="/assets/arrowup.svg"
                 alt="충전요청 닫기"
             />
             </button>

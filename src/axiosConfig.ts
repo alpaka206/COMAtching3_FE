@@ -22,10 +22,14 @@ export function isAuthRequiredError(error: unknown) {
 
 export const publicInstance = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10_000,
+  withCredentials: false,
 });
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10_000,
+  withCredentials: false,
 });
 
 instance.interceptors.request.use((config) => {

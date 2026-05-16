@@ -3,8 +3,8 @@ import * as styles from "../css/components/BottomNavButton.css";
 
 function BottomNavButton({ onClick, imgSrc, imgText, buttonText }) {
   return (
-    <button className={styles.bottomNavButton} onClick={onClick}>
-      <img src={import.meta.env.VITE_PUBLIC_URL + imgSrc} alt={imgText} className={styles.img} />
+    <button className={styles.bottomNavButton} type="button" onClick={onClick}>
+      <img src={imgSrc} alt={imgText} className={styles.img} loading="lazy" decoding="async" />
       {buttonText}
     </button>
   );
