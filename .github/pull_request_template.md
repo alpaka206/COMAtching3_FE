@@ -12,6 +12,7 @@
 - [ ] `npm run policy:branch`
 - [ ] `npm run build`
 - [ ] `npm run lint`
+- [ ] `npm audit --omit=dev --audit-level=moderate`
 - [ ] 주요 화면 수동 확인
 - [ ] Lighthouse 또는 성능 영향 확인
 
@@ -29,6 +30,8 @@
 - [ ] 토큰/시크릿 노출 없음
 - [ ] 불필요한 reflow/repaint 유발 변경 없음
 - [ ] 이미지/동적 로딩 영향 확인
+- [ ] route-only 컴포넌트와 공용 컴포넌트 위치 확인
+- [ ] 빈 파일/죽은 import 없음
 - [ ] Firebase 설정/의존성 추가 없음
 
 ## PR 확인

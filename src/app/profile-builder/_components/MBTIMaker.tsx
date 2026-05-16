@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState } from "react";
 import PropTypes from "prop-types";
-import * as styles from "../css/components/MBTIMaker.css.ts";
+import * as styles from "@/css/components/MBTIMaker.css.ts";
 
 function MBTIMaker({
   mbtiAnswers,

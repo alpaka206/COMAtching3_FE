@@ -1,12 +1,5 @@
 import type { MatchPickState } from "../../store/appStore";
-
-export type MatchRequestPayload = {
-  ageOption: string;
-  mbtiOption: string;
-  hobbyOption: unknown[];
-  contactFrequencyOption: string;
-  sameMajorOption: boolean;
-};
+import type { MatchRequestPayload } from "./types";
 
 export function createMatchRequestPayload(
   matchState: MatchPickState

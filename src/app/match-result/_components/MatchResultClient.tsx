@@ -17,14 +17,22 @@ import { ROUTES } from "@/routes";
 
 function MatchResultClient() {
   const navigate = useNavigate();
-  const [MatchState] = useMatchPickState();
-  const [MatchResult, setMatchResult] = useMatchResultState();
+  const [matchState] = useMatchPickState();
+  const [matchResult, setMatchResult] = useMatchResultState();
 
   const [resultPoint, setResultPoint] = useUserState();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (MatchState.point > resultPoint.point) {
+    const requestPayload = matchState.formData.requestPayload;
+
+    if (!requestPayload) {
+      alert("매칭 조건을 다시 선택해 주세요.");
+      navigate(ROUTES.matching, { replace: true });
+      return;
+    }
+
+    if (matchState.point > resultPoint.point) {
       alert("포인트가 부족합니다!!");
       navigate(ROUTES.charge, { replace: true });
       return;
@@ -35,11 +43,11 @@ function MatchResultClient() {
 
       const response = await instance.post(
         "/auth/user/api/match/request",
-        MatchState.formData.FormData
+        requestPayload
       );
 
       if (response.data.status === 200) {
-        await setMatchResult((prev) => ({
+        setMatchResult((prev) => ({
           ...prev,
           age: response.data.data.age,
           comment: response.data.data.comment,
@@ -52,7 +60,7 @@ function MatchResultClient() {
           socialId: response.data.data.contactId,
           song: response.data.data.song,
         }));
-        await setResultPoint((prev) => ({
+        setResultPoint((prev) => ({
           ...prev,
           point: response.data.data.currentPoint,
         }));
@@ -67,16 +75,16 @@ function MatchResultClient() {
   };
   
   const resultData = useMemo(() => {
-    const hobby = MatchResult.hobby.map((hobbyName) => {
+    const hobby = matchResult.hobby.map((hobbyName) => {
       const matchedIcon = hobbyIcons.find((icon) => icon.label === hobbyName);
       return { name: hobbyName, image: matchedIcon?.image ?? null };
     });
 
     return {
-      ...MatchResult,
+      ...matchResult,
       hobby,
     };
-  }, [MatchResult]);
+  }, [matchResult]);
   
   useEffect(() => {
     if (
@@ -196,7 +204,7 @@ function MatchResultClient() {
                   <button className="Retry-same-button" onClick={handleSubmit}>
                     <div className="Retry-same-button-point">
                       <img src="/assets/point.svg" alt="cost" />
-                      {MatchState.point}P
+                      {matchState.point}P
                     </div>
                     같은 조건으로 다시 뽑기
                   </button>

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as styles from  "../css/components/ContactFrequencyMaker.css.ts";
+import * as styles from "@/css/components/ContactFrequencyMaker.css.ts";
 
 function ContactFrequencyMaker({ handleQuestionComplete, currentUserState, setCurrentUserState, setChooseAnswer }) {
   // 연락 빈도를 클릭했을 때 처리하는 함수

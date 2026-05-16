@@ -21,6 +21,9 @@ npm run dev
 npm run policy:branch
 npm run lint
 npm run build
+npm test
+npm run test:smoke
+npm audit --omit=dev --audit-level=moderate
 ```
 
 린트는 경고 없이 통과하는 상태 유지.
@@ -28,10 +31,10 @@ npm run build
 ## 라우팅 구조
 
 - `src/app`: Next.js App Router 라우트
-- `src/app/<route>/_components`: 라우트별 클라이언트 화면 컴포넌트
-- `src/components`: 여러 라우트에서 공유하는 UI 컴포넌트
+- `src/app/<route>/_components`: 라우트 전용 클라이언트 화면, 섹션, 보조 컴포넌트
+- `src/components`: 두 개 이상 라우트에서 공유하는 UI 컴포넌트
 - `src/hooks`: 공용 React Hook
-- `src/features`: 도메인별 기능 로직과 테스트
+- `src/features`: 도메인별 기능 로직, 계산 함수, 테스트
 - `src/app/providers.tsx`: 공통 클라이언트 Provider와 브라우저 외부 열기 처리
 - `src/lib/react-router-dom.tsx`: 기존 `react-router-dom` 사용처를 Next 라우터로 연결하는 호환 레이어
 

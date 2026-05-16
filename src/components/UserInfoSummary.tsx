@@ -4,10 +4,10 @@ import { useUserValue } from "../store/appStore";
 import * as styles from "../css/components/UserInfoSummary.css.ts";
 import UserInfoContainer from "./UserInfoContainer";
 function UserInfoSummary() {
-  const Info = useUserValue();
+  const userInfo = useUserValue();
   const sliderRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const isInstagram = Info.contact_id && Info.contact_id.startsWith("@");
+  const isInstagram = userInfo.contact_id && userInfo.contact_id.startsWith("@");
 
   const scroll = (pageIndex) => {
     if (sliderRef.current) {
@@ -32,24 +32,24 @@ function UserInfoSummary() {
           <div className={styles.sliderPage}>
             <UserInfoContainer
               FirstTopic="전공"
-              FirstText={Info.major}
+              FirstText={userInfo.major}
               SecondTopic="나이"
-              SecondText={Info.age}
+              SecondText={userInfo.age}
             />
             <UserInfoContainer
               FirstTopic="좋아하는 노래"
-              FirstText={Info.song}
+              FirstText={userInfo.song}
               SecondTopic="MBTI"
-              SecondText={Info.mbti}
+              SecondText={userInfo.mbti}
             />
           </div>
           <div className={`${styles.sliderPage} ${styles.sliderPageSecond}`}>
-            <UserInfoContainer FirstTopic="취미" FirstText={Info.hobby} />
+            <UserInfoContainer FirstTopic="취미" FirstText={userInfo.hobby} />
             <UserInfoContainer
               FirstTopic="나를 표현하는 한마디"
-              FirstText={Info.comment}
+              FirstText={userInfo.comment}
               SecondTopic="연락빈도"
-              SecondText={Info.contact_frequency}
+              SecondText={userInfo.contact_frequency}
             />
           </div>
         </div>
@@ -64,7 +64,7 @@ function UserInfoSummary() {
         <div className={styles.userContact}>
           <div>
             <span>{isInstagram ? "InstagramID : " : "KakaoTalkID : "}</span>
-            <span> {Info.contact_id}</span>
+            <span> {userInfo.contact_id}</span>
           </div>
         </div>
       </div>

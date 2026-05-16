@@ -68,8 +68,8 @@ function MainPageLoggedIn({ onLogout }) {
         setUserInfo((prev) => ({
           ...prev,
           eventokay: true, // Set eventokay to false after participation
+          pickMe: prev.pickMe + 1,
         }));
-        window.location.reload(); 
       }
     } catch (error) {
       console.error("Error participating in event:", error);
@@ -138,7 +138,7 @@ function MainPageLoggedIn({ onLogout }) {
   };
 
   return (
-    <div className="container">
+    <main className="container">
       <HeaderMain />
       <Background />
       <div className="welcome">
@@ -296,7 +296,7 @@ function MainPageLoggedIn({ onLogout }) {
       {showTutorial && (
         <TutorialSlides onComplete={() => setShowTutorial(false)} />
       )}
-    </div>
+    </main>
   );
 }
 
