@@ -41,6 +41,8 @@ const TITLE_PATTERN = new RegExp(
 const BRANCH_PATTERN = new RegExp(
   `^(${BRANCH_TYPES.join("|")})/[a-z0-9._-]+$`,
 );
+const DEPENDABOT_TITLE_PATTERN =
+  /^chore\(deps(-dev)?\): bump .+ from .+ to .+$/i;
 const FORMAL_ENDING_PATTERN =
   /(합니다|했습니다|됩니다|되었습니다|드립니다|부탁드립니다|바랍니다|주세요|주십시오|습니다|입니다|니다)/;
 const REQUIRED_BODY_SECTIONS = [
@@ -92,8 +94,29 @@ function validateTitle(title) {
   );
 }
 
-function validateBranchName(branch) {
+function isDependabotBranch(branch) {
+  return branch.startsWith("dependabot/");
+}
+
+function isDependabotPr(author, headRef) {
+  return (
+    author === "dependabot[bot]" ||
+    author === "app/dependabot" ||
+    isDependabotBranch(headRef)
+  );
+}
+
+function validateDependabotTitle(title) {
+  assert(title.length > 0, "Dependabot PR 제목 입력 필요");
+  assert(
+    DEPENDABOT_TITLE_PATTERN.test(title),
+    "Dependabot PR 제목은 의존성 업데이트 형식 필요",
+  );
+}
+
+function validateBranchName(branch, options = {}) {
   if (branch === "main" || branch === "develop") return;
+  if (options.allowDependabot && isDependabotBranch(branch)) return;
 
   assert(
     BRANCH_PATTERN.test(branch),
@@ -101,7 +124,7 @@ function validateBranchName(branch) {
   );
 }
 
-function validateBranchFlow(baseRef, headRef) {
+function validateBranchFlow(baseRef, headRef, options = {}) {
   assert(
     baseRef === "develop" || baseRef === "main",
     "PR 대상 브랜치는 develop 또는 main만 허용",
@@ -112,7 +135,7 @@ function validateBranchFlow(baseRef, headRef) {
     return;
   }
 
-  validateBranchName(headRef);
+  validateBranchName(headRef, options);
 }
 
 function validateBody(body) {
@@ -139,7 +162,7 @@ function validateFirebaseDependency() {
 
 function validateBranchMode() {
   const branch = getCurrentBranch();
-  validateBranchName(branch);
+  validateBranchName(branch, { allowDependabot: isDependabotBranch(branch) });
   validateFirebaseDependency();
 }
 
@@ -148,10 +171,21 @@ function validatePrMode() {
   const body = getEnv("PR_BODY");
   const baseRef = getEnv("BASE_REF");
   const headRef = getEnv("HEAD_REF");
+  const prAuthor = getEnv("PR_AUTHOR");
+  const dependabotPr = isDependabotPr(prAuthor, headRef);
 
-  validateTitle(title);
-  validateBranchFlow(baseRef, headRef);
-  validateBody(body);
+  if (dependabotPr) {
+    validateDependabotTitle(title);
+  } else {
+    validateTitle(title);
+  }
+
+  validateBranchFlow(baseRef, headRef, { allowDependabot: dependabotPr });
+
+  if (!dependabotPr) {
+    validateBody(body);
+  }
+
   validateFirebaseDependency();
 }
 

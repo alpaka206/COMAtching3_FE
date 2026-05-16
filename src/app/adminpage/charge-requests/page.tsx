@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const AdminRequestList = dynamic(() => import('@/components/AdminRequestList'), {
+const AdminChargeRequestsClient = dynamic(() => import('./_components/AdminChargeRequestsClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <AdminRequestList />
+  return <AdminChargeRequestsClient />
 }

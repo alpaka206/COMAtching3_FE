@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const TeamManagementPage = dynamic(() => import('@/screens/TeamManagementPage'), {
+const TeamManagementClient = dynamic(() => import('./_components/TeamManagementClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <TeamManagementPage />
+  return <TeamManagementClient />
 }

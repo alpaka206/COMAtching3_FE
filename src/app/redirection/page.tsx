@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const Redirection = dynamic(() => import('@/screens/RedirectionPage'), {
+const RedirectionClient = dynamic(() => import('./_components/RedirectionClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <Redirection />
+  return <RedirectionClient />
 }

@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 
-const Userinfo = dynamic(() => import('@/screens/User_info_page'), {
+const UserInfoClient = dynamic(() => import('./_components/UserInfoClient'), {
   ssr: false,
 })
 
 export default function Page() {
-  return <Userinfo />
+  return <UserInfoClient />
 }
