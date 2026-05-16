@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic'
 
-const Loading = dynamic(() => import('@/screens/Loading'), { ssr: false })
+const LoadingClient = dynamic(() => import('./_components/LoadingClient'), { ssr: false })
 
 export default function Page() {
-  return <Loading />
+  return <LoadingClient />
 }

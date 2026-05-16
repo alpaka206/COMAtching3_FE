@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic'
 
-const Mainpage = dynamic(() => import('@/screens/Mainpage'), { ssr: false })
+const MainPageClient = dynamic(() => import('./_components/MainPageClient'), { ssr: false })
 
 export default function Page() {
-  return <Mainpage />
+  return <MainPageClient />
 }

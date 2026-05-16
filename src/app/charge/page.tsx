@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic'
 
-const Charge = dynamic(() => import('@/screens/Charge'), { ssr: false })
+const ChargeClient = dynamic(() => import('./_components/ChargeClient'), { ssr: false })
 
 export default function Page() {
-  return <Charge />
+  return <ChargeClient />
 }

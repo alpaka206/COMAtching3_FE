@@ -17,7 +17,7 @@ const MyInput = ({
       value={value}
       onChange={onChange}
       onBlur={onBlur}
-      className={className ?? styles.myinput}
+      className={className ?? styles.defaultInput}
       onKeyDown={(e) => {
         onKeyDown?.(e);
         if (e.key === "Enter") {
