@@ -22,7 +22,7 @@ function AgeInput({ value, onChange }) {
 
   return (
     <Fragment>
-      <h3 className={styles.agetitle}>나이</h3>
+      <h3 className={styles.title}>나이</h3>
       <div className={styles.age}>
         <MyInput
           name="age"

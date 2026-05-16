@@ -2,11 +2,11 @@
 
 import dynamic from 'next/dynamic'
 
-const Adminpageunlogin = dynamic(
-  () => import('@/screens/Adminpage_unlogin'),
+const AdminLoginClient = dynamic(
+  () => import('./_components/AdminLoginClient'),
   { ssr: false },
 )
 
 export default function Page() {
-  return <Adminpageunlogin />
+  return <AdminLoginClient />
 }
